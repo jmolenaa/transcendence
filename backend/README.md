@@ -79,3 +79,100 @@ Stores cumulative scores for each player in a tournament.
 | `total_score` | INTEGER | Sum of all match scores                  |
 
 ---
+
+
+
+1️⃣ Backend Container (Fastify)
+Purpose:
+Runs your API and game logic
+
+Manages authentication, matchmaking, and tournament handling
+
+Interacts with SQLite (or another database)
+
+Integrates with the blockchain (Avalanche testnet)
+
+Why separate?
+Keeps business logic independent of the frontend
+
+Allows scalability (e.g., multiple backend instances with a load balancer)
+
+Ensures security (backend is isolated, not exposed directly to users)
+
+Dependencies:
+✅ Database (SQLite)
+✅ Blockchain API
+
+2️⃣ Frontend Container (React/Vanilla TS)
+Purpose:
+Serves the Single-Page Application (SPA)
+
+Calls the backend API to get/update user data
+
+Displays live game updates & matchmaking
+
+Handles Google authentication & WebSockets
+
+Why separate?
+Users access a static site → This makes it faster
+
+Frontend can be served via NGINX for caching & performance
+
+Allows future upgrades without redeploying the backend
+
+Dependencies:
+✅ Backend API
+✅ NGINX Proxy
+
+3️⃣ Database Container (SQLite or Alternative DB)
+Purpose:
+Stores user data, game stats, tournament scores
+
+Handles match history, friend lists, and authentication info
+
+Works inside the backend container OR as a separate service
+
+Why separate (Optional)?
+If you use PostgreSQL/MySQL, you need a dedicated DB container
+
+SQLite is file-based → Can stay inside the backend
+
+Dependencies:
+✅ Backend (API to interact with the DB)
+
+4️⃣ Reverse Proxy Container (NGINX or Traefik)
+Purpose:
+Routes traffic to backend/frontend
+
+Enforces HTTPS (SSL certificates)
+
+Prevents attacks (DDoS, rate limiting, CORS, security headers)
+
+Handles WebSockets for real-time game updates
+
+Why separate?
+Security & Scalability → Exposes only necessary ports
+
+Performance Boost → Caches frontend assets
+
+Required for HTTPS → Secure communication
+
+Dependencies:
+✅ Backend (API requests)
+✅ Frontend (SPA serving)
+
+How These Containers Work Together
+plaintext
+Copy
+Edit
+User → NGINX Proxy → Frontend (React)  
+                      ↓  
+                   Backend (Fastify) → Database (SQLite)  
+                      ↓  
+              Blockchain (Avalanche Testnet)  
+Next Steps
+✅ Need a docker-compose.yml to set everything up?
+✅ Want to discuss networking (e.g., how these containers talk to each other)?
+✅ Need help choosing SQLite vs. PostgreSQL?
+
+Let me know where you need more details! 🚀
