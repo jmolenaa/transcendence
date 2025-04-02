@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
-import {getUsers, addUser, getUserById} from './database.js';
+import {getUsers, addUser, getUserById, deleteUser} from './database.js';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const port = 3000;
@@ -29,6 +29,18 @@ fastify.get('/api/message', (request, reply) => {
 fastify.get('/api/users', (request, reply) => {
     const users = getUsers();  // Retrieve all users from the database
     reply.send(users);  // Send the list of users as the response
+});
+
+fastify.delete('/api/users', async(request, reply) => {
+	const { alias } = request.body;  
+    if (!alias) {
+        return reply.status(400).send({ error: 'Alias is required' });
+    }
+	const success = deleteUser(alias)
+    if (!success) {
+        return reply.status(404).send({ error: 'User not found' });
+    }
+    reply.send({ success: true, alias });	
 });
 
 // API: Add a new user

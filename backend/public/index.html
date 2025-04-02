@@ -21,7 +21,9 @@
   <h2>Add User</h2>
   <input type="text" id="username" placeholder="Enter alias">
   <button id="addUser">Add User</button>
-
+  <h2>DELETE User</h2>
+  <input type="text" id="username" placeholder="Enter alias">
+  <button id="deleteUser">Delete User</button>
   <script>
     // Fetch and display users
     document.getElementById('getUsers').addEventListener('click', async () => {
@@ -58,6 +60,30 @@
         // Refresh user list
         document.getElementById('fetchUsers').click();
     });
+
+	//delete a user
+	document.getElementById('deleteUser').addEventListener('click', async() => {
+		const alias = document.getElementById('username').value;
+		console.log(alias);
+        if (!alias) {
+            alert('Please enter a username');
+            return;
+        }
+		const res = await fetch('/api/users', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ alias })
+        });
+		const data = await res.json(); // Parse the response here
+
+		if (res.ok) {
+        alert(`User deleted: ${alias}`);
+		} else {
+			alert(`Error: ${data.error}`);
+		}
+        // Refresh user list
+        document.getElementById('fetchUsers').click();	
+	});
   </script>
 
 </body>
