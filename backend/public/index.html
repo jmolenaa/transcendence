@@ -10,16 +10,55 @@
   <p id="message">Loading...</p>
   
   <button id="fetchMessage">Get Backend Message</button>
-    <script>
-        document.getElementById('fetchMessage').addEventListener('click', async() => {
-            //The async keyword allows you to use await inside the function for asynchronous operations.
-            const res = await fetch('/api/message');
-            const data = await res.json();
-            //This converts the response body (which is expected to be in JSON format) into a JavaScript object.
-            document.getElementById('message').innerText = data.message;
-            //This accesses the HTML element with the ID message, which is where you want to display the fetched data.
+  <h1>Fastify with SQLite</h1>
+
+  <!-- Display Users -->
+  <h2>Users</h2>
+  <button id="getUsers">Get Users</button>
+  <ul id="userList"></ul>
+
+  <!-- Form to Add Users -->
+  <h2>Add User</h2>
+  <input type="text" id="username" placeholder="Enter alias">
+  <button id="addUser">Add User</button>
+
+  <script>
+    // Fetch and display users
+    document.getElementById('getUsers').addEventListener('click', async () => {
+		//AJAX requests (usually with fetch) is a technique for fetching data from the server 
+		// without reloading the whole page:
+        const res = await fetch('/api/users'); // Send request to Fastify
+        const users = await res.json(); //convert to JSON
+        const userList = document.getElementById('userList');
+        userList.innerHTML = ''; // Clear old data
+
+        users.forEach(user => {
+            const li = document.createElement('li');
+            li.textContent = `${user.id}: ${user.alias}`;
+            userList.appendChild(li);
         });
-    </script>
+    });
+
+    // Add new user
+    document.getElementById('addUser').addEventListener('click', async () => {
+        const alias = document.getElementById('username').value;
+        if (!alias) {
+            alert('Please enter a username');
+            return;
+        }
+
+        const res = await fetch('/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ alias })
+        });
+		const data = await res.json(); // Parse the response here
+
+		alert(`User added: ${data.alias} (ID: ${data.id})`);
+        // Refresh user list
+        document.getElementById('fetchUsers').click();
+    });
+  </script>
 
 </body>
 </html>
