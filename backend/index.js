@@ -32,7 +32,8 @@ fastify.get('/api/users', (request, reply) => {
 });
 
 fastify.delete('/api/users', async(request, reply) => {
-	const { alias } = request.body;  
+    const { alias } = request.body;  
+    console.log("Deleting user with alias:", alias); // Debugging
     if (!alias) {
         return reply.status(400).send({ error: 'Alias is required' });
     }
@@ -59,3 +60,8 @@ fastify.listen({port: port}, (err, address) =>{
         process.exit(1)
      }
 });
+
+
+
+
+//npm install fastify fastify-websocket

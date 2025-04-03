@@ -71,11 +71,8 @@ export function getUserById(id) {
 export function deleteUser(alias) {
 	const stmt = db.prepare('DELETE FROM users WHERE alias = ?');
 	const info = stmt.run(alias);
+	console.log("Delete result:", info);
 	return info.changes > 0;
-	// const success = deleteUser(alias)
-    // if (!success) {
-    //     return reply.status(404).send({ error: 'User not found' });
-    // }
 }
 
 
