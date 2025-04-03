@@ -66,4 +66,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop); // Request next frame
 }
 // Start the game
-gameLoop();
+function startPongGame(player1, player2) {
+    console.log(`Game started with ${player1} vs ${player2}`);
+    gameLoop();
+}

@@ -28,6 +28,7 @@ function draw() {
 
   // Draw paddles
   context.fillStyle = 'white';
+  
   context.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT); // Left paddle
   context.fillRect(WIDTH - PADDLE_WIDTH, rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT); // Right paddle
 
