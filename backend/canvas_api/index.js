@@ -1,7 +1,9 @@
 import Fastify from 'fastify';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
-import {getUsers, addUser, getUserById, deleteUser} from './database.js';
+//Don't forget to update functions here
+import {getUsers, addUser, getUserById, addPlayers, deleteUser} from './database.js';
+
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const port = 3000;
@@ -29,7 +31,7 @@ fastify.post('/api/users', async (request, reply) => {
         return reply.status(400).send({ error: 'Both player names are required' });
     }
 
-    const userId = await addPlayers(player1, player2);
+    const userId = addPlayers(player1, player2);
     reply.send({ message: 'Players added', gameId: userId });
 });
 
