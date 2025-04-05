@@ -3,46 +3,44 @@
 //npx tsc --init
 
 
-import Fastify from 'fastify';
-import websocket from '@fastify/websocket';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fastifyStatic from '@fastify/static';
+const Fastify = require('fastify');
+const fastifyWebSocket = require('@fastify/websocket');
+const fastifyStatic = require('fastify-static');
+const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const fastify = Fastify();
+fastify.register(fastifyWebSocket);
+
 // Register static file handler
 fastify.register(fastifyStatic, {
-    root: path.join(__dirname, 'public'),
+    root: path.join(__dirname),
     prefix: '/',
 }); 
 
 // Регистрируем плагин для WebSocket
-fastify.register(websocket);
 
 // Хранение всех подключений
 let clients = [];
 
-fastify.get('/ws', { websocket: true }, (connection) => {
+fastify.get('/ws', { websocket: true }, (connection, req) => {
     console.log('Client connected');
-    console.log('Total connected clients:', clients.length);
     clients.push(connection.socket);
+    console.log('Total connected clients:', clients.length);
+    
     connection.socket.on('message', (message) => {
-    console.log('Received:', message.toString());
-
-    // 🔁 Broadcast to all clients
-    clients.forEach((client) => {
-    //   if (client.readyState === 1) {
-        client.send(message);
-    //   }
-    });
+        const msg = message.toString();
+        // 🔁 Broadcast to all clients
+        clients.forEach((client) => {
+          if (client.readyState === 1 &&  client !== connection.socket) {
+            client.send(msg);
+          }
+        });
   });
 
   connection.socket.on('close', () => {
     console.log('Client disconnected');
-    clients = clients.filter((client) => client !== connection);
+    clients = clients.filter((client) => client !== connection.socket);
     console.log('Total connected clients:', clients.length);
   });
 });

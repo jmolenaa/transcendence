@@ -13,6 +13,7 @@ const path = require('path');
 
 const fastify = Fastify();
 fastify.register(fastifyWebSocket);
+
 fastify.register(fastifyStatic, {
   root: path.join(__dirname),
   prefix: '/', // Serve index.html from root
