@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        #messages {
+          margin-top: 1rem;
+          padding: 1rem;
+          border: 1px solid #ccc;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        .message {
+          padding: 5px;
+          margin: 5px 0;
+        }
+      </style>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <div id="messages"></div>
+
+    <form id="chatForm">
+        <input type="text" id="messageInput" placeholder="Enter message" />
+        <button type="submit">Send</button>
+      </form>
+    <script>
+        const socket = new WebSocket('https://0.0.0.0:3000/ws');
+        
+        // Когда соединение установлено
+        socket.onopen = () => {
+            console.log('Connected to the server');
+        };
+        
+        // Когда сервер отправляет сообщение
+        socket.onmessage = (event) => {
+            const message = event.data;
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = message;
+            messageDiv.className = 'message'; // ✅ Use the CSS class
+            document.getElementById('messages').appendChild(messageDiv);
+        };
+        document.getElementById('chatForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // 🚫 prevent the page from reloading
+            sendMessage(); // ✉️ send the message
+        });
+        // Функция отправки сообщения
+        function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value;
+
+    // ✅ Show your own message in the chat
+    const messageDiv = document.createElement('div');
+    messageDiv.textContent = `You: ${message}`;
+    messageDiv.className = 'message'; // ✅ Use the CSS class
+    document.getElementById('messages').appendChild(messageDiv);
+    socket.send(message);
+    messageInput.value = '';
+}
+    </script>
+</body>
+</html>

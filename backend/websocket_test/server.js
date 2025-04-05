@@ -5,8 +5,19 @@
 
 import Fastify from 'fastify';
 import websocket from '@fastify/websocket';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fastifyStatic from '@fastify/static';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const fastify = Fastify();
+// Register static file handler
+fastify.register(fastifyStatic, {
+    root: path.join(__dirname, 'public'),
+    prefix: '/',
+}); 
 
 // Регистрируем плагин для WebSocket
 fastify.register(websocket);
@@ -14,35 +25,32 @@ fastify.register(websocket);
 // Хранение всех подключений
 let clients = [];
 
-fastify.get('/ws', { websocket: true }, (connection, req) => {
-    console.log('Connection!')
-    // Добавляем клиента в список при подключении
-    clients.push(connection);
-
-    // Обработка сообщений
+fastify.get('/ws', { websocket: true }, (connection) => {
+    console.log('Client connected');
+    console.log('Total connected clients:', clients.length);
+    clients.push(connection.socket);
     connection.socket.on('message', (message) => {
-        console.log('Received message:', message.toString());
+    console.log('Received:', message.toString());
 
-        // Отправляем сообщение всем подключенным клиентам
-        clients.forEach(client => {
-            // if (client !== connection) {  // Чтобы не отправлять сообщение обратно самому себе
-                client.socket.send(message);
-            // }
-        });
+    // 🔁 Broadcast to all clients
+    clients.forEach((client) => {
+    //   if (client.readyState === 1) {
+        client.send(message);
+    //   }
     });
+  });
 
-    // Удаление клиента из списка при отключении
-    connection.socket.on('close', () => {
-        clients = clients.filter(client => client !== connection);
-        console.log('Client disconnected');
-    });
+  connection.socket.on('close', () => {
+    console.log('Client disconnected');
+    clients = clients.filter((client) => client !== connection);
+    console.log('Total connected clients:', clients.length);
+  });
 });
 
-// Запуск сервера
-fastify.listen({ port: 3000 }, (err, address) => {
-    if (err) {
-        console.error('Error starting server:', err);
-        process.exit(1);
-    }
-    console.log(`Server running at ${address}`);
+fastify.listen({ port: 3000 }, (err) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+  console.log('Server listening on port 3000');
 });
