@@ -2,12 +2,13 @@ import Fastify from 'fastify';
 import path from 'path';
 import fastifyStatic from '@fastify/static';
 import userRoutes from './routes/userRoutes.js';
+import  fastifyWebSocket from '@fastify/websocket';
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const port = 3000;
 
 const fastify = Fastify({ logger: true });
-
+fastify.register(fastifyWebSocket);
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../frontend/public'),
   prefix: '/',  // Serve static files from the root URL (e.g., /index.html, /style.css)

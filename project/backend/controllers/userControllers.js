@@ -38,6 +38,9 @@ const addingPlayers = (request, reply) => {
     reply.send({ message: 'Players added', gameId: userId });
 }
 
+
+
+
 export default {
     getAllUsersHandler,
     createUserHandler,
