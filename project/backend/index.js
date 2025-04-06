@@ -10,7 +10,14 @@ const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../frontend/public'),
-  prefix: '/',
+  prefix: '/',  // Serve static files from the root URL (e.g., /index.html, /style.css)
+});
+
+// Register the src directory to serve JS files (make sure you use a different prefix)
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, '../frontend/src'),
+  prefix: '/src/',  // Serve JS files under the /src/ path (e.g., /src/pong.js, /src/players.js)
+  decorateReply: false,
 });
 
 // Serve index.html
@@ -27,3 +34,5 @@ fastify.listen({ port }, (err, address) => {
     process.exit(1);
   }
 });
+
+//run: npx nodemon index.js
