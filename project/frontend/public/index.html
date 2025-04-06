@@ -4,74 +4,86 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pong Game</title>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background-color: black;
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px; /* Space between inputs and buttons */
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    input {
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      outline: none;
-      font-size: 16px;
-      text-align: center;
-      width: 150px;
-    }
-
-    button {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      background-color: white;
-      color: black;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #ddd;
-    }
-
-    canvas {
-      border: 2px solid white;
-    }
-  </style>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-
-  <div class="controls">
-    <input type="text" id="player1" placeholder="Enter alias 1">
-    <button id="addPlayer1">Go</button>
-    
-    <input type="text" id="player2" placeholder="Enter alias 2">
-    <button id="addPlayer2">Go</button>
-    
-    <button id="startGame">Start Game</button>
+  <div class="header">
+		<h1>Pong Game</h1>
   </div>
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
+    <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
+    <button class="tablinks" onclick="openTab(event, 'Login')">Login</button>
+  </div>
+  <div id="Game" class="tabcontent">
+    <input type="text" id="player1" placeholder="Player 1">
+    <input type="text" id="player2" placeholder="Player 2">
+    <button id="startGame">Start Game</button>
+    <canvas id="pong" width="800" height="600"></canvas>
+  </div>
+  
+  <div id="Chat" class="tabcontent">
+    <h3>Chat</h3>
+  </div>
+  
+  <div id="Login" class="tabcontent">
+    <h3>Login</h3>
+  </div>
+ <script>
+  window.onload = function() {
+      document.querySelector('.tablinks').click();
+  };
+  function openTab(event, tabName) {
+      // Hide all tab contents
+      var tabcontent = document.getElementsByClassName("tabcontent");
+      for (var i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
 
-  <canvas id="pong" width="800" height="400"></canvas>
+      // Remove "active" class from all tab links
+      var tablinks = document.getElementsByClassName("tablinks");
+      for (var i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
 
-  <script src="../src/players.js"></script>
-  <script src="../src/pong.js"></script>
+      // Show the selected tab
+      document.getElementById(tabName).style.display = "block";
 
+      // Add "active" class to the clicked tab
+      event.currentTarget.className += " active";
+
+      // If the "Game" tab is clicked, dynamically add the canvas and scripts
+      if (tabName === "Game") {
+        var gameTab = document.getElementById("Game");
+        if (!document.querySelector('script[src="../src/pong.js"]')) {
+          //This line checks if the script pong.js is already added to the document by searching for a <script> tag with the src attribute set to ../src/pong.js.
+          var script = document.createElement("script");
+          script.src = "../src/pong.js";
+          
+          script.onload = function() {
+            //The onload event is triggered once the pong.js script is successfully loaded.
+            startPongGame("Player 1", "Player 2");  // Example players
+          };
+                  // Append the script to the head instead of the body
+          document.head.appendChild(script);
+        } else {
+          startPongGame("Player 1", "Player 2");  // If the script is already loaded, just start the game
+        }
+      }
+    }
+  
+  </script>
 </body>
 </html>
+
+<!-- document refers to the entire HTML document. It's a global object that represents the content of the page you're working with in JavaScript. Through document, you can access and modify the page's structure.
+head:
+document.head refers to the <head> element of the HTML document. The <head> is a part of the HTML that contains metadata (such as the title of the page, links to stylesheets, and scripts).
+
+Why <head>?: Scripts are often added to the <head> section because it allows the script to load before the rest of the page is rendered (depending on whether you use async or defer attributes). In this case, we're adding the script to the <head> to ensure it loads and executes before other scripts or elements that might rely on it
+  appendChild(pongScript):
+appendChild() is a method that adds a new child element (or node) to a parent element in the DOM (Document Object Model).
+
+In this case, pongScript is the child that we are adding, and the parent is document.head.
+
+pongScript is the dynamically created <script> element that has the src set to "../src/pong.js". This tells the browser to load the JavaScript file located at that path. -->

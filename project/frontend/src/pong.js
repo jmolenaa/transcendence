@@ -5,15 +5,15 @@ var context = canvas.getContext('2d');
 var WIDTH = canvas.width;
 var HEIGHT = canvas.height;
 var PADDLE_WIDTH = 10;
-var PADDLE_HEIGHT = 60;
+var PADDLE_HEIGHT = 100;
 var BALL_SIZE = 10;
 // Set initial positions for paddles and ball
 var leftPaddleY = (HEIGHT - PADDLE_HEIGHT) / 2;
 var rightPaddleY = (HEIGHT - PADDLE_HEIGHT) / 2;
 var ballX = WIDTH / 2;
 var ballY = HEIGHT / 2;
-var ballSpeedX = 5;
-var ballSpeedY = 5;
+var ballSpeedX = 2;
+var ballSpeedY = 2;
 // Draw the paddles and the ball
 function draw() {
     context.clearRect(0, 0, WIDTH, HEIGHT); // Clear the canvas
@@ -67,6 +67,7 @@ function gameLoop() {
 }
 // Start the game
 function startPongGame(player1, player2) {
+    console.log("pong.js loaded");
     console.log(`Game started with ${player1} vs ${player2}`);
     gameLoop();
 }
