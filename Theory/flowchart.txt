@@ -1,0 +1,35 @@
+
+Backend:
+
+        ┌───────────────────────────┐
+        │ Does it enhance/configure │
+        │ Fastify or run globally?  │
+        └────────────┬──────────────┘
+                     │
+         Yes ──────▶ plugins/
+                     │
+                     ▼
+        No → Is it an HTTP endpoint?
+                     │
+         Yes ──────▶ routes/
+                     │
+                     ▼
+        No → Is it request/response logic?
+                     │
+         Yes ──────▶ controllers/
+                     │
+                     ▼
+        No → Is it project-specific logic?
+                     │
+         Yes ──────▶ services/
+                     │
+                     ▼
+        No → Is it DB access code (SQL, schema)?
+                     │
+         Yes ──────▶ db/
+                     │
+                     ▼
+        No → Is it a utility/helper/middleware?
+                     │
+         Yes ──────▶ utils/
+

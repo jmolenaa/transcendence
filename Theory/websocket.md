@@ -137,3 +137,115 @@ TypeScript:
 Бэкенд: Используется Node.js с фреймворками, как Fastify или Express, на JavaScript. Типизация не обязательна, но сервер может работать с API, предоставляя данные.
 Фронтенд: Используется TypeScript для безопасности, автодополнения и типизации. Современные фреймворки, такие как React, Angular или Vue, поддерживают TypeScript, который компилируется в JavaScript для работы в браузере.
 API: Бэкенд и фронтенд могут взаимодействовать через REST API или WebSockets, что позволяет легко интегрировать их между собой.
+
+
+
+
+Check:
+
+Great! It's good to know that you're able to send messages with the connection `const socket = new WebSocket('https://0.0.0.0:3000/ws');`. However, there are a few important details we should address to ensure everything works properly in your GitHub Codespaces setup:
+
+### 1. **WebSocket over HTTPS**
+   - When using `https://`, your WebSocket connection must be over **secure WebSocket (wss)**, as WebSockets over `https` require `wss` (WebSocket Secure).
+   - The WebSocket protocol over HTTPS needs to be secured, which means the server must be running an SSL/TLS certificate.
+
+   If your server is currently not configured to use SSL (which is typical in local development environments), you need to adjust it to support WebSocket Secure (`wss://`).
+
+### 2. **Setting up HTTPS for WebSocket**
+   If you're trying to use `wss://` (secure WebSocket) and need to set up HTTPS, you'll need to modify your WebSocket server to enable SSL. Here’s a basic way to enable `wss://` for your Fastify WebSocket server:
+
+   #### Example for SSL setup with Fastify:
+
+   First, you’ll need to install the necessary SSL libraries:
+   ```bash
+   npm install fastify-https
+   ```
+
+   Then, you’ll need to generate or get your SSL certificates (`cert.pem` and `key.pem` files). If you don’t have SSL certificates, you can generate self-signed ones for testing:
+
+   ```bash
+   openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout key.pem -out cert.pem
+   ```
+
+   #### Fastify with SSL configuration:
+
+   ```javascript
+   import Fastify from 'fastify';
+   import websocket from '@fastify/websocket';
+   import path from 'path';
+   import fs from 'fs';
+
+   const fastify = Fastify();
+
+   // Register WebSocket and static file handler
+   fastify.register(websocket);
+   fastify.register(require('@fastify/static'), {
+       root: path.join(__dirname, 'public'),
+       prefix: '/',
+   });
+
+   // SSL setup for secure WebSocket
+   const certOptions = {
+       key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+       cert: fs.readFileSync(path.join(__dirname, 'cert.pem'))
+   };
+
+   // WebSocket clients array
+   let clients = [];
+
+   fastify.get('/ws', { websocket: true }, (connection) => {
+       console.log('Client connected');
+       clients.push(connection.socket);
+
+       connection.socket.on('message', (message) => {
+           console.log('Received message:', message.toString());
+
+           // Broadcast to all clients
+           clients.forEach((client) => {
+               if (client.readyState === 1) {
+                   client.send(message);
+               }
+           });
+       });
+
+       connection.socket.on('close', () => {
+           console.log('Client disconnected');
+           clients = clients.filter((client) => client !== connection.socket);
+       });
+   });
+
+   // Start the server with HTTPS
+   fastify.listen({ port: 3000, host: '0.0.0.0', https: certOptions }, (err, address) => {
+       if (err) {
+           console.error(err);
+           process.exit(1);
+       }
+       console.log(`Server listening on ${address}`);
+   });
+   ```
+
+   In this code:
+   - The WebSocket server is secured with SSL.
+   - The `wss://` protocol will now work, and clients will be able to connect using `wss://0.0.0.0:3000/ws`.
+
+### 3. **Change WebSocket client to `wss://`**
+   Since your server is now secure with `wss://`, you need to update the client connection as well:
+
+   ```javascript
+   const socket = new WebSocket('wss://0.0.0.0:3000/ws');
+   ```
+
+### 4. **Check Firewall and Port Exposure in Codespaces**
+   If you are using GitHub Codespaces, you may still need to expose the port correctly:
+   - Go to the **Ports** section in Codespaces and ensure port `3000` is exposed for both HTTP and HTTPS traffic.
+   - Make sure to check the port URL provided by GitHub Codespaces once it's exposed. It may look like `https://<your-codespace-name>-3000.githubpreview.dev`, and you should use that URL in the client instead of `localhost` or `0.0.0.0`.
+
+---
+
+### Summary
+1. Use `wss://` (secure WebSocket) when the server is running over `https://`.
+2. Set up SSL/TLS certificates for your server to handle secure WebSocket connections.
+3. Update the WebSocket connection URL in your client to `wss://0.0.0.0:3000/ws`.
+4. Ensure the port `3000` is exposed properly in Codespaces.
+
+Let me know if this helps or if you encounter any further issues!
