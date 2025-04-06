@@ -1,4 +1,4 @@
-import { getUsers, addUser, deleteUser } from '../services/userService.js';
+import { getUsers, addUser, deleteUser } from '../services/userServices.js';
 
 const getAllUsersHandler = (request, reply) => {
     const users = getUsers();  // Retrieve all users from the database
@@ -32,3 +32,4 @@ export default {
     createUserHandler,
     deleteUserHandler
 };
+

@@ -9,7 +9,7 @@ const port = 3000;
 const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyStatic, {
-  root: path.join(__dirname, 'public'),
+  root: path.join(__dirname, '../frontend/public'),
   prefix: '/',
 });
 
