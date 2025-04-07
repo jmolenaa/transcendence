@@ -13,19 +13,29 @@
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
     <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
+    <button class="tablinks" onclick="openTab(event, 'Login')">Stats</button>
     <button class="tablinks" onclick="openTab(event, 'Login')">Login</button>
   </div>
   <div id="Game" class="tabcontent">
     <input type="text" id="player1" placeholder="Player 1">
     <input type="text" id="player2" placeholder="Player 2">
-    <button id="startGame">Start Game</button>
-    <canvas id="pong" width="800" height="600"></canvas>
+    <button id="startGame" onclick="loadGameScript()">Start Game</button>
+    <div id="gameContainer">
+      <div id="gameStatus">0 - 0</div> <!-- Score in h1 -->
+  </div>
+  
+    <canvas id="pong" width="800" height="600" style="border:1px solid #ffffff; margin-top: 20px;"></canvas>
   </div>
   
   <div id="Chat" class="tabcontent">
     <h3>Chat</h3>
+    <input type="text" id="messageInput" placeholder="Type a message" />
+    <button id="sendBtn" >Send Message</button>
+    <div id="messages"></div>
   </div>
-  
+  <div id="Stats" class="tabcontent">
+    <h3>Login</h3>
+  </div>
   <div id="Login" class="tabcontent">
     <h3>Login</h3>
   </div>
@@ -51,24 +61,58 @@
 
       // Add "active" class to the clicked tab
       event.currentTarget.className += " active";
+      if (tabName == 'Chat')
+        loadChatScript();
+    }
+    // Load the game script if not already loaded
+    function loadGameScript() {
+      const input1 = document.getElementById("player1");
+      const input2 = document.getElementById("player2");
+      const buttonStart = document.getElementById("startGame");
+      if (input1 && input2 && buttonStart) {
+        // Hide inputs when game starts
+        input1.classList.add('hidden');
+        input2.classList.add('hidden');   
+        buttonStart.classList.add('hidden');  
+      }
+      let player1Name = document.getElementById('player1').value.trim() || "Player 1";
+      let player2Name = document.getElementById('player2').value.trim() || "Player 2";
+      if (player1Name === player2Name) {
+        alert("Player names must be different!");
+        return;
+      }
+      if (!document.querySelector('script[src="../src/players.js"]')) {
+        const scriptPlayers = document.createElement("script");
+        scriptPlayers.src = "../src/players.js";
+        scriptPlayers.onload = function () {
+          console.log('CREATE players:', player1Name, player2Name);
+            createPlayers(player1Name, player2Name); // Start the game
+        };
+        document.head.appendChild(scriptPlayers);
+      }
+       if (!document.querySelector('script[src="../src/pong.js"]')) {
+        const scriptGame = document.createElement("script");
+        scriptGame.src = "../src/pong.js";
+        scriptGame.onload = function () {
+          startPongGame(player1Name, player2Name); // Start the game
+        };
+        document.head.appendChild(scriptGame);
+      } else {
+        // startPongGame(player1Name, player2Name); // If already loaded, just start the game
+      }
+    }
 
-      // If the "Game" tab is clicked, dynamically add the canvas and scripts
-      if (tabName === "Game") {
-        var gameTab = document.getElementById("Game");
-        if (!document.querySelector('script[src="../src/pong.js"]')) {
-          //This line checks if the script pong.js is already added to the document by searching for a <script> tag with the src attribute set to ../src/pong.js.
-          var script = document.createElement("script");
-          script.src = "../src/pong.js";
-          
-          script.onload = function() {
-            //The onload event is triggered once the pong.js script is successfully loaded.
-            startPongGame("Player 1", "Player 2");  // Example players
-          };
-                  // Append the script to the head instead of the body
-          document.head.appendChild(script);
-        } else {
-          startPongGame("Player 1", "Player 2");  // If the script is already loaded, just start the game
-        }
+    // Load the chat script if not already loaded
+    function loadChatScript() {
+      if (!document.querySelector('script[src="../src/chat.js"]')) {
+        const scriptChat = document.createElement("script");
+        scriptChat.src = "../src/chat.js";
+        scriptChat.onload = function () {
+          startChat("Player 1", "Player 2"); // Start the chat
+        };
+        document.head.appendChild(scriptChat);
+      } else {
+        startChat("Player 1", "Player 2"); // If already loaded, just start the chat
       }
     }
   

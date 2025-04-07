@@ -14,6 +14,10 @@ var ballX = WIDTH / 2;
 var ballY = HEIGHT / 2;
 var ballSpeedX = 2;
 var ballSpeedY = 2;
+var leftPlayerScore = 0;
+var rightPlayerScore = 0;
+// var player1Name = "";
+// var player2Name = "";
 // Draw the paddles and the ball
 function draw() {
     context.clearRect(0, 0, WIDTH, HEIGHT); // Clear the canvas
@@ -38,12 +42,25 @@ function updateBall() {
         ballSpeedX = -ballSpeedX; // Bounce
     }
     // Ball goes out of bounds (left or right)
-    if (ballX <= 0 || ballX + BALL_SIZE >= WIDTH) {
-        // Reset ball position
+    if (ballX <= 0) {
+        rightPlayerScore++;
+
         ballX = WIDTH / 2;
         ballY = HEIGHT / 2;
         ballSpeedX = -ballSpeedX; // Change ball direction
     }
+    if (ballX + BALL_SIZE >= WIDTH) {
+        leftPlayerScore++;
+
+        ballX = WIDTH / 2;
+        ballY = HEIGHT / 2;
+        ballSpeedX = -ballSpeedX; // Change ball direction
+    }
+}
+
+function updateGameStatus(player1Name, player2Name){
+    var gameStatusDiv = document.getElementById('gameStatus');
+    gameStatusDiv.innerHTML = `${player1Name} ${leftPlayerScore} - ${rightPlayerScore} ${player2Name}`;   
 }
 // Control paddles with keyboard (W/S for left paddle, Arrow keys for right paddle)
 function movePaddles(event) {
@@ -63,11 +80,33 @@ document.addEventListener('keydown', movePaddles);
 function gameLoop() {
     draw();
     updateBall();
+    updateGameStatus(player1Name, player2Name);
+    if (leftPlayerScore >= 3 || rightPlayerScore >= 3) {
+        fetch('api/winner', { // Correct route for saving game results
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ player1: player1Name, player2: player2Name, winner: leftPlayerScore >= 3 ? player1Name : player2Name })
+        })
+        // Game over condition, stop the game loop
+        console.log('Game Over!'); // Placeholder for game over logic
+        return;
+    }
     requestAnimationFrame(gameLoop); // Request next frame
 }
 // Start the game
 function startPongGame(player1, player2) {
-    console.log("pong.js loaded");
-    console.log(`Game started with ${player1} vs ${player2}`);
-    gameLoop();
+    player1Name = player1 || "Player 1"; // Default to "Player 1" if no name is provided
+    player2Name = player2 || "Player 2"; 
+    gameLoop(player1, player2);
+}
+
+function stopPongGame (){
+    console.log('Stopping game');
+    if (animationId) {
+      cancelAnimationFrame(animationId); // Stop the animation frame
+    }
+    // Optionally: clear canvas, reset game state, etc.
+    const canvas = document.getElementById("pong");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
