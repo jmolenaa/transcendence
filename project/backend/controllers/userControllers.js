@@ -27,7 +27,7 @@ const deleteUserHandler = (request, reply) => {
     reply.send({ success: true, alias });    
 }
 
-const addingPlayers = (request, reply) => {
+const addingPlayersHandler = (request, reply) => {
     const { player1, player2 } = request.body;
 
     if (!player1 || !player2) {
@@ -35,16 +35,25 @@ const addingPlayers = (request, reply) => {
     }
 
     const userId = addPlayers(player1, player2);
-    reply.send({ message: 'Players added', gameId: userId });
+    reply.send({ message: 'Players added in Controllers', gameId: userId });
 }
 
+const saveWinnerHandler = (request, reply) => {
+    const { player1, player2, winner_name } = request.body;
+    if (!player1 || !player2 || !winner_name) {
+        return reply.status(400).send({ error: 'Player names and winner ID are required' });
+    }
 
+    const gameId = saveGameResults(player1, player2, winner_name);
+    reply.send({ message: 'Game results saved', gameId });
+}
 
 
 export default {
     getAllUsersHandler,
     createUserHandler,
     deleteUserHandler,
-    addingPlayers
+    addingPlayersHandler,
+    saveWinnerHandler
 };
 

@@ -3,8 +3,11 @@ import path from 'path';
 import fastifyStatic from '@fastify/static';
 import userRoutes from './routes/userRoutes.js';
 import  fastifyWebSocket from '@fastify/websocket';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const port = 3000;
 
 const fastify = Fastify({ logger: true });
@@ -37,3 +40,4 @@ fastify.listen({ port }, (err, address) => {
 });
 
 //run: npx nodemon index.js
+//rm -rf node_modules package-lock.json && npm init -y && npm install fastify fastify-static nodemon ws websocket better-sqlite3
