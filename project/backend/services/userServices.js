@@ -57,5 +57,17 @@ export function saveGameResults(player1, player2, winner_name) {
     return info.lastInsertRowid;
 }
 
+export function checkCredentials(username, password) {
+	const user = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password);
+	return user;
+}
+
+export function registerInDatabase(username, password, nickname) {
+	const stmt = db.prepare('INSERT INTO users (username, password, alias) VALUES (?, ?, ?)');
+	const info = stmt.run(username, password, nickname);
+	return user;
+}
+
+
 // Export the database instance for direct use if needed
 export default db;

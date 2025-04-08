@@ -5,6 +5,10 @@ import userRoutes from './routes/userRoutes.js';
 import  fastifyWebSocket from '@fastify/websocket';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import dotenv from 'dotenv';
+dotenv.config();   // Are we allowed???????????????
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

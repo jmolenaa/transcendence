@@ -21,7 +21,7 @@
     <input type="text" id="player2" placeholder="Player 2">
     <button id="startGame" onclick="loadGameScript()">Start Game</button>
     <div id="gameContainer">
-      <div id="gameStatus">0 - 0</div> <!-- Score in h1 -->
+      <div id="gameStatus">0 - 0</div> 
   </div>
   
     <canvas id="pong" width="800" height="600" style="border:1px solid #ffffff; margin-top: 20px;"></canvas>
@@ -34,10 +34,16 @@
     <div id="messages"></div>
   </div>
   <div id="Stats" class="tabcontent">
-    <h3>Login</h3>
+    <h3>Stats</h3>
   </div>
   <div id="Login" class="tabcontent">
     <h3>Login</h3>
+	<form id = loginForm>
+		<input type="text" id="email" placeholder="Email" required>
+		<input type="password" id="password" placeholder="Password" required>
+		<button type="submit">Login</button>
+	</form>
+	<div id="loginError" class="hidden">Invalid email or password</div>
   </div>
  <script>
   window.onload = function() {
@@ -63,7 +69,48 @@
       event.currentTarget.className += " active";
       if (tabName == 'Chat')
         loadChatScript();
-    }
+
+	//Login logic:
+	  if (tabName == 'Login'){
+		document.getElementById('loginForm').addEventListener('submit', async function(event) {
+			event.preventDefault(); // Prevent the form from submitting normally
+			var email = document.getElementById('email').value;
+			var password = document.getElementById('password').value;
+			const loginError = document.getElementById('loginError');
+			// loginError.classList.add('hidden');
+			loginError.style.display = "none";
+			try {
+				const response = fetch('/api/auth/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ email, password})
+				});
+				if (!response.ok){
+					loginError.style.display = "block";
+					return ;
+				}
+			// Parse JSON response
+			const data = await response.json();
+			const token = data.token; // This is your JWT token
+
+			// Store JWT in localStorage (or an HTTP-only cookie for better security)
+			localStorage.setItem('jwtToken', token);
+
+			// Redirect or update UI after successful login
+			// Example: Show user profile or navigate to another page
+			window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
+		} catch (err) {
+			console.error('Login failed:', err);
+			loginError.style.display = 'block';
+		}
+		});
+	  }
+    } //Doesn't work cause I can't register a user manually with a hashed password, need to register a user first and after that check the passwords. 
+	  // also choose between Storing JWT in localStorage (or an HTTP-only cookie for better security)
+
+
     // Load the game script if not already loaded
     function loadGameScript() {
       const input1 = document.getElementById("player1");
@@ -85,7 +132,7 @@
         const scriptPlayers = document.createElement("script");
         scriptPlayers.src = "../src/players.js";
         scriptPlayers.onload = function () {
-          console.log('CREATE players:', player1Name, player2Name);
+          //console.log('CREATE players:', player1Name, player2Name);
             createPlayers(player1Name, player2Name); // Start the game
         };
         document.head.appendChild(scriptPlayers);

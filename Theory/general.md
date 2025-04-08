@@ -38,11 +38,22 @@ npm install fastify@4
 npm install @fastify/static@7 for working with html
 npm install sqlite3 better-sqlite3 for working with a database
 
-npm init -y && npm install fastify@4 && npm install @fastify/static@7 && npm install sqlite3 better-sqlite3 fastify-sqlite && npm install @fastify/websocket@10
+npm init -y && npm install fastify@4 && npm install @fastify/static@7 && npm install sqlite3 better-sqlite3 fastify-sqlite && npm install @fastify/websocket@10 && npm install bcrypt jsonwebtoken && npm install dotenv
 
 
-Run the server: node index.js
+Run the server: node index.js or npx nodemon index.js
 
 **API stands for Application Programming Interface**, which is just a way for one software (e.g., your React app) to talk to another software (e.g., Fastify) using standard methods (like GET, POST). The API server takes requests from the frontend, processes them (by talking to databases, other services, or logic), and sends back responses. API: Canvas, MapTiles, Google Search, Youtube.
 
 
+Using .env:
+
+Step 1: Install dotenv with npm install dotenv.
+
+Step 2: Add require('dotenv').config() at the top of your entry file.
+
+Step 3: Store your secret in .env as JWT_SECRET=your-secret-key.
+
+Step 4: Access the secret using process.env.JWT_SECRET.
+
+Step 5: Use the secret securely without hardcoding it in your code.
