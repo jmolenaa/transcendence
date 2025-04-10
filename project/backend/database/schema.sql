@@ -1,6 +1,6 @@
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        alias TEXT NOT NULL UNIQUE,
+        username TEXT NOT NULL UNIQUE,
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL,
 		avatar TEXT DEFAULT 'default_avatar.jpg',

@@ -9,25 +9,25 @@ const getAllUsersHandler = (request, reply) => {
 }
 
 const createUserHandler = (request, reply) => {
-    const { alias } = request.body;
-    if (!alias) {
-        return reply.status(400).send({ error: 'Alias is required' });
+    const { username } = request.body;
+    if (!username) {
+        return reply.status(400).send({ error: 'username is required' });
     }
-    const userId = addUser(alias);
-    reply.send({ id: userId, alias }); 
+    const userId = addUser(username);
+    reply.send({ id: userId, username }); 
 }
 
 const deleteUserHandler = (request, reply) => {
-    const { alias } = request.body;  
-    console.log("Deleting user with alias:", alias); // Debugging
-    if (!alias) {
-        return reply.status(400).send({ error: 'Alias is required' });
+    const { username } = request.body;  
+    console.log("Deleting user with username:", username); // Debugging
+    if (!username) {
+        return reply.status(400).send({ error: 'username is required' });
     }
-    const success = deleteUser(alias)
+    const success = deleteUser(username)
     if (!success) {
         return reply.status(404).send({ error: 'User not found' });
     }
-    reply.send({ success: true, alias });    
+    reply.send({ success: true, username });    
 }
 
 const addingPlayersHandler = (request, reply) => {
@@ -68,7 +68,7 @@ const loginHandler = async(request, reply) => {
 //Generate a JWT (JSON Web Token) for the user
 	const payload = {
 		userId: user.id,
-		username: user.alias,
+		username: user.username,
 	}
 	const token = fastify.jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
 
@@ -104,17 +104,27 @@ const loginHandler = async(request, reply) => {
 }
 
 const registerHandler = async (request, reply) => {
-	const {username, password, nickname} = request.body;
-	if (!username || !password || !nickname) {
-		return reply.status(400).send({ error: 'Username, password and nickname are required' });
+	const { email, password, username } = request.body;
+	console.log('Incoming data:', { email, password, username });
+
+	if (!email || !password || !username) {
+		return reply.status(400).send({ error: 'Email, password and username are required' });
 	}
-	const hashedPassword = await bcrypt.hash(password, 10);
-	const registerUser = registerInDatabase(username, password, nickname);
-	if (!registerUser) {
-		return reply.status(400).send({ error: 'Registration failed' });
+
+	try {
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const registerUser = userServices.registerInDatabase(email, hashedPassword, username);
+
+		if (!registerUser) {
+			return reply.status(500).send({ error: 'Registration failed' });
+		}
+
+		reply.send({ message: 'Registration successful' });
+	} catch (err) {
+		console.error('Registration error:', err);
+		reply.status(500).send({ error: 'Something went wrong on the server' });
 	}
-	reply.send({ message: 'Registration successful' });
-}
+};
 
 
 

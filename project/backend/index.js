@@ -36,6 +36,9 @@ fastify.get('/', (request, reply) => {
 // Register all routes
 fastify.register(userRoutes);
 
+fastify.addHook('onRequest', async (req, res) => {
+  console.log('[Request]', req.method, req.url);
+});
 fastify.listen({ port }, (err, address) => {
   if (err) {
     fastify.log.error(err);

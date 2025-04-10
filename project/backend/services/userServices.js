@@ -1,14 +1,14 @@
 import db from '../database/index.js';
 
 // Function to insert a user
-export function addUser(alias) {
-    const checkUser = db.prepare('SELECT * FROM users WHERE alias = ?').get(alias);
+export function addUser(username) {
+    const checkUser = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
     if (checkUser) {
         console.log("User already exists:", checkUser);
         return ;
     }
-    const stmt = db.prepare('INSERT INTO users (alias) VALUES (?)');
-    const info = stmt.run(alias);
+    const stmt = db.prepare('INSERT INTO users (username) VALUES (?)');
+    const info = stmt.run(username);
     return info.lastInsertRowid;
 }
 
@@ -30,9 +30,9 @@ export function addPlayers(player1, player2) {
 }
 
 
-export function deleteUser(alias) {
-    const stmt = db.prepare('DELETE FROM users WHERE alias = ?');
-    const info = stmt.run(alias);
+export function deleteUser(username) {
+    const stmt = db.prepare('DELETE FROM users WHERE username = ?');
+    const info = stmt.run(username);
     console.log("Delete result:", info);
     return info.changes > 0;
 }
@@ -40,14 +40,14 @@ export function deleteUser(alias) {
 
 //Not working yet
 export function saveGameResults(player1, player2, winner_name) {
-    const user1 = db.prepare('SELECT * FROM users WHERE alias = ?').get(player1);
-    const user2 = db.prepare('SELECT * FROM users WHERE alias = ?').get(player2);
+    const user1 = db.prepare('SELECT * FROM users WHERE username = ?').get(player1);
+    const user2 = db.prepare('SELECT * FROM users WHERE username = ?').get(player2);
 
     if (!user1 || !user2) {
         console.log("One or both players not found in the database");
         return;
     }
-    const winner = db.prepare('SELECT * FROM users WHERE alias = ?').get(winner_name);
+    const winner = db.prepare('SELECT * FROM users WHERE username = ?').get(winner_name);
     if (!winner) {
         console.log("Winner not found in the database");
         return;
@@ -62,10 +62,10 @@ export function checkCredentials(username, password) {
 	return user;
 }
 
-export function registerInDatabase(username, password, nickname) {
-	const stmt = db.prepare('INSERT INTO users (username, password, alias) VALUES (?, ?, ?)');
-	const info = stmt.run(username, password, nickname);
-	return user;
+export function registerInDatabase(email, password, username) {
+	const stmt = db.prepare('INSERT INTO users (email, password, username) VALUES (?, ?, ?)');
+	const info = stmt.run(email, password, username);
+	return info;
 }
 
 
