@@ -32,26 +32,26 @@ fastify.get('/api/users', (request, reply) => {
 });
 
 fastify.delete('/api/users', async(request, reply) => {
-    const { alias } = request.body;  
-    console.log("Deleting user with alias:", alias); // Debugging
-    if (!alias) {
-        return reply.status(400).send({ error: 'Alias is required' });
+    const { username } = request.body;  
+    console.log("Deleting user with username:", username); // Debugging
+    if (!username) {
+        return reply.status(400).send({ error: 'username is required' });
     }
-	const success = deleteUser(alias)
+	const success = deleteUser(username)
     if (!success) {
         return reply.status(404).send({ error: 'User not found' });
     }
-    reply.send({ success: true, alias });	
+    reply.send({ success: true, username });	
 });
 
 // API: Add a new user
 fastify.post('/api/users', async (request, reply) => {
-    const { alias } = request.body;
-    if (!alias) {
-        return reply.status(400).send({ error: 'Alias is required' });
+    const { username } = request.body;
+    if (!username) {
+        return reply.status(400).send({ error: 'username is required' });
     }
-    const userId = addUser(alias);
-    reply.send({ id: userId, alias });
+    const userId = addUser(username);
+    reply.send({ id: userId, username });
 });
 
 fastify.listen({port: port}, (err, address) =>{

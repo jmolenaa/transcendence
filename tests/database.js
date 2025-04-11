@@ -6,7 +6,7 @@ const db = new Database('database.sqlite');
 db.exec(`
     CREATE TABLE IF NOT EXISTS  users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        alias TEXT NOT NULL,
+        username TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -52,9 +52,9 @@ db.exec(`
 `);
 
 // Function to insert a user
-export function addUser(alias) {
-    const stmt = db.prepare('INSERT INTO users (alias) VALUES (?)');
-    const info = stmt.run(alias);
+export function addUser(username) {
+    const stmt = db.prepare('INSERT INTO users (username) VALUES (?)');
+    const info = stmt.run(username);
     return info.lastInsertRowid;
 }
 
@@ -68,9 +68,9 @@ export function getUserById(id) {
     return db.prepare('SELECT * FROM users WHERE id = ?').get(id);
 }
 
-export function deleteUser(alias) {
-	const stmt = db.prepare('DELETE FROM users WHERE alias = ?');
-	const info = stmt.run(alias);
+export function deleteUser(username) {
+	const stmt = db.prepare('DELETE FROM users WHERE username = ?');
+	const info = stmt.run(username);
 	console.log("Delete result:", info);
 	return info.changes > 0;
 }

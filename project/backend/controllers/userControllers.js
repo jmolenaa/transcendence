@@ -126,6 +126,17 @@ const registerHandler = async (request, reply) => {
 	}
 };
 
+const googleHandler = async(request, reply) => {
+	//https://github.com/googleapis/google-api-nodejs-client
+	//https://developers.google.com/identity/protocols/oauth2
+
+	//Theory?
+};
+
+
+
+
+
 
 
 

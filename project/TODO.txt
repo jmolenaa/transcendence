@@ -2,3 +2,4 @@ Am i allowed to use bcrypt library for hashing passwords?
 Frontend - using canvas (totally illegal)
 Frontend should be done with Typescript
 Delete .env
+Is @fastify/oauth2 allowed?

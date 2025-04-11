@@ -18,7 +18,7 @@ fastify.get('/ws', {websocket: true}, (connection, req) => {...})
 
 
 method: currently it supports GET, HEAD, TRACE, DELETE, OPTIONS, PATCH, PUT and POST. 
-url: the path of the URL to match this route (alias: path).
+url: the path of the URL to match this route (username: path).
 schema: an object containing the schemas for the request and response. They need to be in JSON Schema format
 onRequest(request, reply, done): a function called as soon as a request is received, it could also be an array of functions....
 

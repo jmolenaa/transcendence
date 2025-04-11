@@ -12,7 +12,7 @@ Each player registers before the tournament starts.
 | Column      | Type     | Description                              |
 |------------|---------|------------------------------------------|
 | `id`       | INTEGER | Unique player ID (Primary Key, Auto-Increment) |
-| `alias`    | TEXT    | Player's chosen alias (nickname)        |
+| `username`    | TEXT    | Player's chosen username (username)        |
 | `created_at` | DATETIME | Timestamp when the player registered |
 
 ---
@@ -97,7 +97,7 @@ SELECT * FROM users;
 
 Conditional select
 SELECT * FROM users WHERE id = 1;
-SELECT * FROM users ORDER BY alias;
+SELECT * FROM users ORDER BY username;
 
 Leave
 .exit
