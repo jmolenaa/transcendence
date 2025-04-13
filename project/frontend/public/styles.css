@@ -4,9 +4,10 @@
     padding: 0;
     background: black;
   }
-  .hidden {
+
+  /* .hidden {
     display: none;
-  }
+  } */
 
   .header {
     background-color: inherit;
@@ -85,6 +86,10 @@
     cursor: pointer; /* Change cursor to pointer when hovering over the button */
     margin-left: 20px; /* Add space above the button */
 }
+/* 
+#pong {
+	width: 100%;
+} */
 
 #gameStatus{
     height: 10dvh;

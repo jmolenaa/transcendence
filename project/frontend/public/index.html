@@ -13,7 +13,7 @@
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
     <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
-    <button class="tablinks" onclick="openTab(event, 'Login')">Stats</button>
+    <button class="tablinks" onclick="openTab(event, 'Tournament')">Tournament</button>
     <button class="tablinks" onclick="openTab(event, 'Login')">Login</button>
   </div>
   <div id="Game" class="tabcontent">
@@ -33,17 +33,20 @@
     <button id="sendBtn" >Send Message</button>
     <div id="messages"></div>
   </div>
-  <div id="Stats" class="tabcontent">
-    <h3>Stats</h3>
+  <div id="Tournament" class="tabcontent">
+    <h3>Tournament</h3>
   </div>
   <div id="Login" class="tabcontent">
-    <!-- <h3>Login</h3>
+    <h3>Login</h3>
 	<form id = loginForm>
 		<input type="text" id="email" placeholder="Email" required>
 		<input type="password" id="password" placeholder="Password" required>
 		<button type="submit">Login</button>
-	</form> -->
-  <h3>register</h3>
+	</form>
+	<div id="LoginError" class="hidden">Invalid email or password</div>
+	<br>
+	<br>
+  <h3>Register</h3>
 	<form id = registerForm>
 		<input type="text" id="emailR" placeholder="Email" required>
 		<input type="password" id="passwordR" placeholder="Password" required>
@@ -53,9 +56,9 @@
 	<div id="registerError" class="hidden">Invalid email or password</div>
   </div>
  <script>
-window.onload = function() {
-    document.querySelector('.tablinks').click(); // Click the default tab
-};
+	window.onload = function() {
+    	document.querySelector('.tablinks').click(); // Click the default tab
+	};
 
 function openTab(event, tabName) {
     // Hide all tab contents
@@ -83,49 +86,44 @@ function openTab(event, tabName) {
 
     // Handle Login tab logic
     if (tabName === 'Login') {
-		// document.getElementById('loginForm').addEventListener('submit', async function(event) {
-		// 	event.preventDefault(); // Prevent the form from submitting normally
-		// 	var email = document.getElementById('email').value;
-		// 	var password = document.getElementById('password').value;
-		// 	const loginError = document.getElementById('loginError');
-		// 	// loginError.classList.add('hidden');
-		// 	loginError.style.display = "none";
-		// 	try {
-		// 		const response = await fetch('/api/auth/login', {
-		// 			method: 'POST',
-		// 			headers: {
-		// 				'Content-Type': 'application/json'
-		// 			},
-		// 			body: JSON.stringify({ email, password})
-		// 		});
-		// 		if (!response.ok){
-		// 			loginError.style.display = "block";
-		// 			return ;
-		// 		}
-		// 	// Parse JSON response
-		// 	const data = await response.json();
-		// 	const token = data.token; // This is your JWT token
-
-		// 	// Store JWT in localStorage (or an HTTP-only cookie for better security)
-		// 	localStorage.setItem('jwtToken', token);
-
-		// 	// Redirect or update UI after successful login
-		// 	// Example: Show user profile or navigate to another page
-		// 	//window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
-		// } catch (err) {
-		// 	console.error('Login failed:', err);
-		// 	loginError.style.display = 'block';
-		// }
-		// });
+		document.getElementById('loginForm').addEventListener('submit', async function(event) {
+			event.preventDefault(); // Prevent the form from submitting normally
+			var email = document.getElementById('email').value;
+			var password = document.getElementById('password').value;
+			//const loginError = document.getElementById('loginError');
+			// loginError.classList.add('hidden');
+			// loginError.style.display = "none";
+			try {
+				const response = await fetch('/api/auth/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ email, password}),
+					credentials: 'include' // Include cookies in the request
+				});
+				if (!response.ok){
+					//loginError.style.display = "block";
+					return ;
+				}
+				const data = await response.json();
+			// Redirect or update UI after successful login
+			// Example: Show user profile or navigate to another page
+			//window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
+		} catch (err) {
+			console.error('Login failed:', err);
+			//loginError.style.display = 'block';
+		}
+		});
 
     document.getElementById('registerForm').addEventListener('submit', async function(event) {
 			event.preventDefault(); // Prevent the form from submitting normally
 			var email = document.getElementById('emailR').value;
 			var password = document.getElementById('passwordR').value;
       var username = document.getElementById('username').value;
-			const registerError = document.getElementById('registerError');
-			registerError.classList.add('hidden');
-			registerError.style.display = "none";
+			//const registerError = document.getElementById('registerError');
+			// registerError.classList.add('hidden');
+			//registerError.style.display = "none";
 			try {
        const response = await fetch('/api/auth/register', {
 					method: 'POST',
@@ -135,16 +133,9 @@ function openTab(event, tabName) {
 					body: JSON.stringify({ email, password, username})
 				});
 				if (!response.ok){
-          console.log("Response is not ok");
-					registerError.style.display = "block";
+					//registerError.style.display = "block";
 					return ;
 				}
-			// Parse JSON response
-			const data = await response.json();
-			const token = data.token; // This is your JWT token
-
-			// Store JWT in localStorage (or an HTTP-only cookie for better security)
-			localStorage.setItem('jwtToken', token);
 
 			// Redirect or update UI after successful login
 			// Example: Show user profile or navigate to another page
@@ -152,7 +143,7 @@ function openTab(event, tabName) {
 		} catch (err) {
       console.log("Error");
 			console.error('registerForm failed:', err);
-			registerError.style.display = 'block';
+			//registerError.style.display = 'block';
 		}
 		});
 	  }

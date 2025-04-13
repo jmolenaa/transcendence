@@ -1,5 +1,5 @@
 import db from '../database/index.js';
-
+import bcrypt from 'bcrypt';
 // Function to insert a user
 export function addUser(username) {
     const checkUser = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
@@ -57,14 +57,17 @@ export function saveGameResults(player1, player2, winner_name) {
     return info.lastInsertRowid;
 }
 
-export function checkCredentials(username, password) {
-	const user = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password);
+export async function checkCredentials (email){
+	const user = await db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+	console.log("User found: ", user.password);
 	return user;
 }
 
-export function registerInDatabase(email, password, username) {
+export async function registerInDatabase(email, password, username) {
+	const hashedPassword = await bcrypt.hash(password, 10); 
 	const stmt = db.prepare('INSERT INTO users (email, password, username) VALUES (?, ?, ?)');
-	const info = stmt.run(email, password, username);
+	const info = stmt.run(email, hashedPassword, username);
+	console.log("User registered: ", user.password);
 	return info;
 }
 

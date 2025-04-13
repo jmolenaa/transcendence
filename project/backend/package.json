@@ -5,17 +5,20 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "concurrently \"nodemon index.js\" \"python3 liveDatabase.py\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/jwt": "^9.1.0",
     "@fastify/static": "^7.0.4",
     "@fastify/websocket": "^10.0.1",
     "@types/websocket": "^1.0.10",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^11.9.1",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7",
     "fastify": "^4.29.0",
     "fastify-websocket": "^4.3.0",

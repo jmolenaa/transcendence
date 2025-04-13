@@ -53,73 +53,62 @@ const saveWinnerHandler = (request, reply) => {
 
 
 const loginHandler = async(request, reply) => {
-	const { username, password } = request.body;
-	if (!username || !password) {
+	console.log('SECRET in Login:', process.env.JWT_SECRET);
+	const { email, password } = request.body;
+	if (!email || !password) {
 		return reply.status(400).send({ error: 'Username and password are required' });
 	}
-	const user = checkCredentials(username, password);
+	console.log('Incoming data in Login:', request.body);
+	const user = await userServices.checkCredentials(email);
+	console.log ("Password: ", user.password, password);
 	if (!user) {
+		console.log ("No user found");
 		return reply.status(401).send({ error: 'Invalid credentials' });
 	}
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
+		console.log ("Password does not match");
 		return reply.status(401).send({ error: 'Invalid credentials' });
 	}
-//Generate a JWT (JSON Web Token) for the user
-	const payload = {
-		userId: user.id,
-		username: user.username,
-	}
-	const token = fastify.jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
-
-	reply.send({ token });
-
-	//or set the JWT in an HTTP-only cookie
-	    // Send the JWT as an HTTP-only cookie
-		// reply.setCookie('token', token, {
-		// 	httpOnly: true,  // Ensures it's not accessible via JavaScript
-		// 	secure: process.env.NODE_ENV === 'production',  // Ensures the cookie is only sent over HTTPS in production
-		// 	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
-		// 	expires: new Date(Date.now() + 3600 * 1000)  // Cookie expires in 1 hour
-		// });
-		// reply.send({ message: 'Login successful' });
-
-	// and it will need:
-	// const protectedRouteHandler = async (request, reply) => {
-	// 	try {
-	// 		// Get the JWT from the cookie
-	// 		const token = request.cookies.token;
-	// 		if (!token) {
-	// 			return reply.status(401).send({ error: 'No token provided' });
-	// 		}
-	
-	// 		// Verify the token
-	// 		const decoded = fastify.jwt.verify(token, JWT_SECRET);
-	// 		request.user = decoded;  // You can use this info in your handler
-	// 		reply.send({ message: 'Protected data accessed' });
-	// 	} catch (err) {
-	// 		reply.status(401).send({ error: 'Invalid or expired token' });
-	// 	}
-	// };
+	const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
+	// const token = reply.jwt.sign({ email }, { expiresIn: '1h' });
+	// Set the JWT in an HTTP-only cookie
+	reply.setCookie('token', token, {
+		httpOnly: true,  // Ensures it's not accessible via JavaScript
+		secure: true,
+		sameSite: 'Strict',  // Prevents cross-site request forgery attacks
+		path: '/',  // Cookie is available on all routes
+		expires: 7 * 24 * 60 * 60, // 7 days
+	});
+	return reply.status(201).send({ message: 'Registration successful' });
 }
 
 const registerHandler = async (request, reply) => {
 	const { email, password, username } = request.body;
-	console.log('Incoming data:', { email, password, username });
+	console.log('Incoming data:', { email, username , password});
 
 	if (!email || !password || !username) {
 		return reply.status(400).send({ error: 'Email, password and username are required' });
 	}
 
 	try {
-		const hashedPassword = await bcrypt.hash(password, 10);
-		const registerUser = userServices.registerInDatabase(email, hashedPassword, username);
+		// const hashedPassword = await bcrypt.hash(password, 10);
+		const registerUser = userServices.registerInDatabase(email, password, username);
 
 		if (!registerUser) {
 			return reply.status(500).send({ error: 'Registration failed' });
 		}
-
-		reply.send({ message: 'Registration successful' });
+		// DO I NEED TOKEN HERE????????????????????
+		// const token = fastify.jwt.sign({ email, username }, JWT_SECRET, { expiresIn: '1h' });
+		// // Set the JWT in an HTTP-only cookie
+		// reply.setCookie('token', token, {
+		// 	httpOnly: true,  // Ensures it's not accessible via JavaScript
+		// 	secure: true,
+		// 	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
+		// 	path: '/',  // Cookie is available on all routes
+		// 	expires: 7 * 24 * 60 * 60, // 7 days
+		// });
+		return reply.status(201).send({ message: 'Registration successful' });
 	} catch (err) {
 		console.error('Registration error:', err);
 		reply.status(500).send({ error: 'Something went wrong on the server' });
@@ -134,7 +123,11 @@ const googleHandler = async(request, reply) => {
 };
 
 
-
+const logoutHandler = async(request, reply) => {
+//API response:
+	reply.clearCookie('token', {path: '/'});
+	reply.send({ message: 'Logged out successfully' });
+}
 
 
 
@@ -147,7 +140,8 @@ export default {
     addingPlayersHandler,
     saveWinnerHandler,
 	loginHandler,
-	registerHandler
+	registerHandler,
+	logoutHandler
 
 };
 

@@ -126,3 +126,99 @@ Implementation Steps in Fastify:
     });
 
 
+Cookies are small pieces of data stored in the user's browser. They are:
+Sent automatically with every request to your server (if properly set).
+Often used to store session data, like a JWT token.
+Can be made secure, so the frontend can’t access them (httpOnly: true).
+When you set a cookie from the backend, the browser remembers it and sends it with every future request to that domain. That’s how your API knows who the user is, without the frontend having to manage tokens manually.
+
+
+How Authentication Works Right Now
+🔐 Register Flow
+1. User submits registration form
+The user enters their username, email, and password in the register form.
+
+2. Frontend sends data to backend
+In the frontend, you gather the form data and send a POST request to your backend:
+
+await fetch('http://localhost:3000/api/auth/register', {
+	method: 'POST',
+	headers: { 'Content-Type': 'application/json' },
+	credentials: 'include', // Include cookies (JWT) in the request
+	body: JSON.stringify({ username, email, password }),
+});
+✅ The credentials: 'include' option allows cookies (like your JWT) to be included in requests and responses.
+
+3. Backend receives and processes request
+Using REST API, the backend receives the request and hashes the password with bcrypt.
+
+const hashedPassword = await bcrypt.hash(password, 10);
+
+
+4. Create and sign JWT token
+You then create and sign a JWT token:
+
+const token = fastify.jwt.sign(
+	{ email, username },
+	JWT_SECRET,
+	{ expiresIn: '1h' }
+);
+fastify.jwt.sign(...): Signs and creates the token.
+The JWT is a JSON string, base64-encoded and signed.
+
+The token contains:
+The payload (email, username, etc.)
+The algorithm used (e.g., HS256)
+The signature (based on your JWT_SECRET)
+
+For this we need to import JWT and load your .env file:
+
+import jwt from 'jsonwebtoken';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+5. Send the token in an HTTP-only cookie
+Now we send a response to the frontend with the JWT stored securely in a cookie:
+
+reply
+	.setCookie('token', token, {
+		httpOnly: true,        // Not accessible via JavaScript 
+		secure: true,          // Only sent over HTTPS
+		sameSite: 'Strict',    // Prevents attacks
+		path: '/',             // Available on all routes
+		maxAge: 7 * 24 * 60 * 60, // 7 days
+	})
+	.send({ message: 'Registration successful' });
+💡 This cookie contains the JWT but is not visible in frontend JavaScript, making it more secure.
+
+6. Frontend receives the response
+
+const data = await res.json();
+
+if (res.ok) {
+	console.log(data.message); // "Registration successful"
+}
+The JWT is not returned in the body. It's automatically stored as a cookie in the browser.
+
+On subsequent requests, the browser will automatically send this cookie back to your backend.
+
+7. JWT Cookie in Action
+On any protected route (e.g., /api/user/me), the cookie is sent automatically:
+
+await fetch('/api/user/me', {
+	method: 'GET',
+	credentials: 'include', // Sends the token cookie
+});
+Your backend can then:
+Extract the token from the cookie
+Verify it using fastify.jwt.verify()
+Grant access based on the decoded user info
+
+✅ Summary
+Step	Description
+1.	User submits username, email, and password
+2.	Frontend sends a POST request with credentials
+3.	Backend hashes the password
+4.	JWT is signed with fastify.jwt.sign(...)
+5.	Token is stored in an HTTP-only, secure cookie
+6.	Frontend gets a "Registration successful" message
+7.	Browser sends JWT cookie automatically on future requests for protected pages

@@ -5,10 +5,15 @@ import userRoutes from './routes/userRoutes.js';
 import  fastifyWebSocket from '@fastify/websocket';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+// import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-dotenv.config();   // Are we allowed???????????????
 
+dotenv.config();   // loads environment variables from the .env file and makes them accessible in process.env.
 
+//console.log('Environment Variables:', process.env); // Log all environment variables for debugging
+
+//Cant find JWT IN process.env
+console.log('JWT_SECRET:', process.env.JWT_SECRET); // Log the JWT_SECRET for debugging
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,13 +37,15 @@ fastify.register(fastifyStatic, {
 fastify.get('/', (request, reply) => {
   reply.sendFile('index.html');
 });
-
+// fastify.register(jwt, {
+// 	secret: process.env.JWT_SECRET,
+//   });
 // Register all routes
 fastify.register(userRoutes);
 
-fastify.addHook('onRequest', async (req, res) => {
-  console.log('[Request]', req.method, req.url);
-});
+// fastify.addHook('onRequest', async (req, res) => {
+//   console.log('[Request]', req.method, req.url);
+// });
 fastify.listen({ port }, (err, address) => {
   if (err) {
     fastify.log.error(err);
@@ -48,3 +55,7 @@ fastify.listen({ port }, (err, address) => {
 
 //run: npx nodemon index.js
 //rm -rf node_modules package-lock.json && npm init -y && npm install fastify fastify-static nodemon ws websocket better-sqlite3
+
+
+//if native module version mismatch — your better-sqlite3 was compiled with a different Node.js version than the one you're currently using: 
+// npm rebuild better-sqlite3

@@ -19,6 +19,6 @@ export default async function userRoutes(fastify) {
 	// fastify.post('/api/auth/verify', userControllers.verifyHandler); //??
 
     //Google
-    fastify.get('/api/auth/google', userControllers.googleHandler);
-    fastify.get('/api/auth/callback', userControllers.callbackHandler);
+    // fastify.get('/api/auth/google', userControllers.googleHandler);
+    // fastify.get('/api/auth/callback', userControllers.callbackHandler);
 }
