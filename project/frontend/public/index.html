@@ -23,10 +23,9 @@
     <div id="gameContainer">
       <div id="gameStatus">0 - 0</div> 
   </div>
-  
     <canvas id="pong" width="800" height="600" style="border:1px solid #ffffff; margin-top: 20px;"></canvas>
   </div>
-  
+
   <div id="Chat" class="tabcontent">
     <h3>Chat</h3>
     <input type="text" id="messageInput" placeholder="Type a message" />
@@ -54,8 +53,24 @@
 		<button type="submit">Register</button>
 	</form>
 	<div id="registerError" class="hidden">Invalid email or password</div>
+  <br>
+  <br>
+  <div id="card" class="hidden">
+    <img src="../../backend/default_avatar.jpg" alt="portrait" style="width:100%">
+    <h1>Not Anna</h1>
+    <p class="title">CEO & Founder</p>
+    <p>Won - </p>
+    <p>Lost - </p>
+    <p>nichija - </p>    
+    <p><button>Logout</button></p>
   </div>
- <script>
+  </div>
+<!-- 
+  Main Script
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html> -->
+<script>
 	window.onload = function() {
     	document.querySelector('.tablinks').click(); // Click the default tab
 	};
@@ -103,13 +118,14 @@ function openTab(event, tabName) {
 					credentials: 'include' // Include cookies in the request
 				});
 				if (!response.ok){
-					//loginError.style.display = "block";
-					return ;
+          return ;
 				}
 				const data = await response.json();
-			// Redirect or update UI after successful login
-			// Example: Show user profile or navigate to another page
-			//window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
+        // Redirect or update UI after successful login
+        // Example: Show user profile or navigate to another page
+        //window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
+        console.log("Show profile");
+        card.style.display = "block";
 		} catch (err) {
 			console.error('Login failed:', err);
 			//loginError.style.display = 'block';

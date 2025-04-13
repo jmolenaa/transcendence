@@ -130,7 +130,24 @@ const logoutHandler = async(request, reply) => {
 }
 
 
-
+const profileHandler = (request, reply) => {
+	const token = request.cookies.token;
+	if (!token){
+		return reply.code(401).send({error: "Not authorized"});
+	}
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		const user = userServices.getUserByEmail(decoded.email); 
+		if (!user) {
+			return reply.code(404).send({ error: 'User not found' });
+		}
+		reply.send({ user });
+	}
+	catch (err) {
+		console.error('Token verification error:', err);
+		reply.code(401).send({ error: 'Invalid token' });
+	}
+}
 
 
 export default {
@@ -141,17 +158,12 @@ export default {
     saveWinnerHandler,
 	loginHandler,
 	registerHandler,
-	logoutHandler
+	logoutHandler,
+	profileHandler
 
 };
 
 // Plan:
-// 3. Secure the JWT Authentication Flow:
-// For JWT tokens, you'll want to ensure that they are securely signed and validated.
-
-// As you're doing in your loginHandler, you're already signing the JWT with a secret key. 
-// Remember that JWTs should be stored securely on the frontend (e.g., in HTTP-only cookies) 
-// to prevent XSS attacks.
 
 // 4. Handle JWT Expiration:
 // Since your JWT expires in 1 hour (expiresIn: '1h'), you'll want to handle token expiration 

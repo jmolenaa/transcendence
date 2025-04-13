@@ -23,6 +23,10 @@ export function getUserById(id) {
     return db.prepare('SELECT * FROM users WHERE id = ?').get(id);
 }
 
+export function getUserByEmail(email){
+    return db.prepare('SELECT * FROM users WHERE email').get(email);
+}
+
 export function addPlayers(player1, player2) {
     console.log('In userServices players:', player1, player2);
     const info1 = addUser(player1);
@@ -78,3 +82,5 @@ export async function registerInDatabase(email, password, username) {
 
 // Export the database instance for direct use if needed
 export default db;
+
+//if use better-sqlite - everything should be async

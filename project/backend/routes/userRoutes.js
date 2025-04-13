@@ -21,4 +21,8 @@ export default async function userRoutes(fastify) {
     //Google
     // fastify.get('/api/auth/google', userControllers.googleHandler);
     // fastify.get('/api/auth/callback', userControllers.callbackHandler);
+
+
+    //Profile only for logged in
+    fastify.get('/api/profile', userControllers.profileHandler);
 }

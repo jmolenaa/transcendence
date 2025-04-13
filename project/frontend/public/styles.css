@@ -5,9 +5,9 @@
     background: black;
   }
 
-  /* .hidden {
+  .hidden {
     display: none;
-  } */
+  }
 
   .header {
     background-color: inherit;
