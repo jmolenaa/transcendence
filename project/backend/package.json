@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cookie": "^7.4.0",
     "@fastify/jwt": "^9.1.0",
     "@fastify/static": "^7.0.4",
     "@fastify/websocket": "^10.0.1",

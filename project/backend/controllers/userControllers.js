@@ -1,7 +1,7 @@
 import * as userServices  from '../services/userServices.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-const JWT_SECRET = process.env.JWT_SECRET; //using environmental variable for JWT secret
+const JWT_SECRET = "" + process.env.JWT_SECRET; //using environmental variable for JWT secret
 
 const getAllUsersHandler = (request, reply) => {
     const users = getUsers();  // Retrieve all users from the database

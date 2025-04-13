@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 // import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
+import cookie from '@fastify/cookie';
 dotenv.config();   // loads environment variables from the .env file and makes them accessible in process.env.
 
 //console.log('Environment Variables:', process.env); // Log all environment variables for debugging
@@ -32,15 +32,12 @@ fastify.register(fastifyStatic, {
   prefix: '/src/',  // Serve JS files under the /src/ path (e.g., /src/pong.js, /src/players.js)
   decorateReply: false,
 });
-
 // Serve index.html
 fastify.get('/', (request, reply) => {
   reply.sendFile('index.html');
 });
-// fastify.register(jwt, {
-// 	secret: process.env.JWT_SECRET,
-//   });
-// Register all routes
+  // Register all routes
+fastify.register(cookie, {});
 fastify.register(userRoutes);
 
 // fastify.addHook('onRequest', async (req, res) => {
