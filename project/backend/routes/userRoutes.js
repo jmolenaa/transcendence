@@ -14,7 +14,7 @@ export default async function userRoutes(fastify) {
 	//Auth:
 	fastify.post('/api/auth/login', userControllers.loginHandler);
 	fastify.post('/api/auth/register', userControllers.registerHandler);
-	// fastify.post('/api/auth/logout', userControllers.logoutHandler);// ??
+	fastify.post('/api/auth/logout', userControllers.logoutHandler);// ??
 	// fastify.get('/api/auth/user', userControllers.getUserHandler); //??
 	// fastify.post('/api/auth/verify', userControllers.verifyHandler); //??
 

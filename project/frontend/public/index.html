@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pong Game</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body>
   <div class="header">
-		<h1>Pong Game</h1>
+    <h1>Pong Game</h1>
   </div>
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
     <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
     <button class="tablinks" onclick="openTab(event, 'Tournament')">Tournament</button>
     <button class="tablinks" onclick="openTab(event, 'Login')">Login</button>
+    <button class="tablinks" onclick="openTab(event, 'Profile')" id="defaultOpen">Profile</button>
   </div>
   <div id="Game" class="tabcontent">
     <input type="text" id="player1" placeholder="Player 1">
     <input type="text" id="player2" placeholder="Player 2">
     <button id="startGame" onclick="loadGameScript()">Start Game</button>
     <div id="gameContainer">
-      <div id="gameStatus">0 - 0</div> 
-  </div>
+      <div id="gameStatus">0 - 0</div>
+    </div>
     <canvas id="pong" width="800" height="600" style="border:1px solid #ffffff; margin-top: 20px;"></canvas>
   </div>
-
   <div id="Chat" class="tabcontent">
     <h3>Chat</h3>
     <input type="text" id="messageInput" placeholder="Type a message" />
-    <button id="sendBtn" >Send Message</button>
+    <button id="sendBtn">Send Message</button>
     <div id="messages"></div>
   </div>
   <div id="Tournament" class="tabcontent">
@@ -37,133 +39,184 @@
   </div>
   <div id="Login" class="tabcontent">
     <h3>Login</h3>
-	<form id = loginForm>
-		<input type="text" id="email" placeholder="Email" required>
-		<input type="password" id="password" placeholder="Password" required>
-		<button type="submit">Login</button>
-	</form>
-	<div id="LoginError" class="hidden">Invalid email or password</div>
-	<br>
-	<br>
-  <h3>Register</h3>
-	<form id = registerForm>
-		<input type="text" id="emailR" placeholder="Email" required>
-		<input type="password" id="passwordR" placeholder="Password" required>
-    <input type="text" id="username" placeholder="username" required>
-		<button type="submit">Register</button>
-	</form>
-	<div id="registerError" class="hidden">Invalid email or password</div>
-  <br>
-  <br>
-  <div id="card" class="hidden">
-    <img src="../../backend/default_avatar.jpg" alt="portrait" style="width:100%">
-    <h1>Not Anna</h1>
-    <p class="title">CEO & Founder</p>
-    <p>Won - </p>
-    <p>Lost - </p>
-    <p>nichija - </p>    
-    <p><button>Logout</button></p>
+    <form id=loginForm>
+      <input type="text" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <div id="LoginError" class="hidden">Invalid email or password</div>
+    <br>
+    <br>
+    <h3>Register</h3>
+    <form id=registerForm>
+      <input type="text" id="emailR" placeholder="Email" required>
+      <input type="password" id="passwordR" placeholder="Password" required>
+      <input type="text" id="username" placeholder="username" required>
+      <button type="submit">Register</button>
+    </form>
+    <div id="registerError" class="hidden">Invalid email or password</div>
   </div>
+  <div id="Profile" class="tabcontent">
+    <div class="profileGrid">
+      <div class="profilePhoto">
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+        <img id="defaultAvatar" src="./assets/default_avatar.jpg" alt="Click to change avatar" />
+
+      </div>
+      <div class="usernameField">
+        <h1>Not Anna</h1> Here we gonna change user name
+      </div>
+      <div class="logout">
+        <p><button class="logout" type="logout">Logout</button></p>
+      </div>
+      <div class="statistics">Statistics, Tournament info and so on</div>
+    </div>
   </div>
-<!-- 
+
+  <!-- 
   Main Script
   <script type="module" src="./src/main.js"></script>
 </body>
 </html> -->
-<script>
-	window.onload = function() {
-    	document.querySelector('.tablinks').click(); // Click the default tab
-	};
+  <script>
+    window.onload = function () {
+      document.querySelector('.tablinks').click(); // Click the default tab
+    };
 
-function openTab(event, tabName) {
-    // Hide all tab contents
-    var tabcontent = document.getElementsByClassName("tabcontent");
-    for (var i = 0; i < tabcontent.length; i++) {
+    function openTab(event, tabName) {
+      // Hide all tab contents
+      var tabcontent = document.getElementsByClassName("tabcontent");
+      for (var i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
-    }
+      }
 
-    // Remove "active" class from all tab links
-    var tablinks = document.getElementsByClassName("tablinks");
-    for (var i = 0; i < tablinks.length; i++) {
+      // Remove "active" class from all tab links
+      var tablinks = document.getElementsByClassName("tablinks");
+      for (var i = 0; i < tablinks.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      // Show the selected tab
+      document.getElementById(tabName).style.display = "block";
+      // Add "active" class to clicked tab
+      event.currentTarget.className += " active";
+      // document.getElementById("defaultOpen").click(); /*CHANGE*/
+
+
+      // Handle specific tab logic
+      if (tabName === 'Chat') {
+        loadChatScript();
+      }
+
+      // Handle Login tab logic
+      if (tabName === 'Login') {
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+          var email = document.getElementById('email').value;
+          var password = document.getElementById('password').value;
+          //const loginError = document.getElementById('loginError');
+          // loginError.classList.add('hidden');
+          // loginError.style.display = "none";
+          try {
+            const response = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email, password }),
+              credentials: 'include' // Include cookies in the request
+            });
+            if (!response.ok) {
+              return;
+            }
+            const data = await response.json();
+            // Redirect or update UI after successful login
+            // Example: Show user profile or navigate to another page
+            //window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
+            console.log("Show profile");
+
+          } catch (err) {
+            console.error('Login failed:', err);
+            //loginError.style.display = 'block';
+          }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+          var email = document.getElementById('emailR').value;
+          var password = document.getElementById('passwordR').value;
+          var username = document.getElementById('username').value;
+          //const registerError = document.getElementById('registerError');
+          // registerError.classList.add('hidden');
+          //registerError.style.display = "none";
+          try {
+            const response = await fetch('/api/auth/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email, password, username })
+            });
+            if (!response.ok) {
+              //registerError.style.display = "block";
+              return;
+            }
+
+            // Redirect or update UI after successful login
+            // Example: Show user profile or navigate to another page
+            //window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
+          } catch (err) {
+            console.log("Error");
+            console.error('registerForm failed:', err);
+            //registerError.style.display = 'block';
+          }
+        });
+      }
+    
+
+    /*PROFILE PART*/
+    if (tabName === 'Profile') {
+      const defaultAvatar = document.getElementById("defaultAvatar");
+      const fileInput = document.getElementById("fileInput");
+
+      // When the image is clicked, trigger the file input
+      defaultAvatar.addEventListener("click", function () {
+        fileInput.click();
+      });
+      fileInput.addEventListener("change", function (event) {
+        const file = event.target.files[0]; //get the selected file
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            defaultAvatar.src = e.target.result; // Set the image source to the selected file
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+
+      /*Logout*/
+      const logout = document.querySelector('.logout').addEventListener('click', function () {
+        alert("Logout");
+        fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include' // Include cookies in the request
+        })
+          .then(response => {
+            if (response.ok) {
+              // Redirect to the login page or show a success message
+              // window.location.href = '/login'; // Redirect to the login page
+            } else {
+              console.error('Logout failed');
+            }
+          })
+      })
     }
+  }
 
-    // Show the selected tab
-    document.getElementById(tabName).style.display = "block";
-
-    // Add "active" class to clicked tab
-    event.currentTarget.className += " active";
-
-    // Handle specific tab logic
-    if (tabName === 'Chat') {
-        loadChatScript();  // Assuming you have this function defined
-    }
-
-    // Handle Login tab logic
-    if (tabName === 'Login') {
-		document.getElementById('loginForm').addEventListener('submit', async function(event) {
-			event.preventDefault(); // Prevent the form from submitting normally
-			var email = document.getElementById('email').value;
-			var password = document.getElementById('password').value;
-			//const loginError = document.getElementById('loginError');
-			// loginError.classList.add('hidden');
-			// loginError.style.display = "none";
-			try {
-				const response = await fetch('/api/auth/login', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ email, password}),
-					credentials: 'include' // Include cookies in the request
-				});
-				if (!response.ok){
-          return ;
-				}
-				const data = await response.json();
-        // Redirect or update UI after successful login
-        // Example: Show user profile or navigate to another page
-        //window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
-        console.log("Show profile");
-        card.style.display = "block";
-		} catch (err) {
-			console.error('Login failed:', err);
-			//loginError.style.display = 'block';
-		}
-		});
-
-    document.getElementById('registerForm').addEventListener('submit', async function(event) {
-			event.preventDefault(); // Prevent the form from submitting normally
-			var email = document.getElementById('emailR').value;
-			var password = document.getElementById('passwordR').value;
-      var username = document.getElementById('username').value;
-			//const registerError = document.getElementById('registerError');
-			// registerError.classList.add('hidden');
-			//registerError.style.display = "none";
-			try {
-       const response = await fetch('/api/auth/register', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ email, password, username})
-				});
-				if (!response.ok){
-					//registerError.style.display = "block";
-					return ;
-				}
-
-			// Redirect or update UI after successful login
-			// Example: Show user profile or navigate to another page
-			//window.location.href = '/dashboard';  // Redirect to a dashboard page or another protected route
-		} catch (err) {
-      console.log("Error");
-			console.error('registerForm failed:', err);
-			//registerError.style.display = 'block';
-		}
-		});
-	  }
-    } 
     // Load the game script if not already loaded
     function loadGameScript() {
       const input1 = document.getElementById("player1");
@@ -172,8 +225,8 @@ function openTab(event, tabName) {
       if (input1 && input2 && buttonStart) {
         // Hide inputs when game starts
         input1.classList.add('hidden');
-        input2.classList.add('hidden');   
-        buttonStart.classList.add('hidden');  
+        input2.classList.add('hidden');
+        buttonStart.classList.add('hidden');
       }
       let player1Name = document.getElementById('player1').value.trim() || "Player 1";
       let player2Name = document.getElementById('player2').value.trim() || "Player 2";
@@ -186,11 +239,11 @@ function openTab(event, tabName) {
         scriptPlayers.src = "../src/players.js";
         scriptPlayers.onload = function () {
           //console.log('CREATE players:', player1Name, player2Name);
-            createPlayers(player1Name, player2Name); // Start the game
+          createPlayers(player1Name, player2Name); // Start the game
         };
         document.head.appendChild(scriptPlayers);
       }
-       if (!document.querySelector('script[src="../src/pong.js"]')) {
+      if (!document.querySelector('script[src="../src/pong.js"]')) {
         const scriptGame = document.createElement("script");
         scriptGame.src = "../src/pong.js";
         scriptGame.onload = function () {
@@ -215,9 +268,10 @@ function openTab(event, tabName) {
         startChat("Player 1", "Player 2"); // If already loaded, just start the chat
       }
     }
-  
+
   </script>
 </body>
+
 </html>
 
 <!-- document refers to the entire HTML document. It's a global object that represents the content of the page you're working with in JavaScript. Through document, you can access and modify the page's structure.

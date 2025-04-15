@@ -1,125 +1,195 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    background: black;
-  }
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background: black;
+}
 
-  .hidden {
-    display: none;
-  }
+.hidden {
+  display: none;
+}
 
-  .header {
-    background-color: inherit;
-    color: white;
-    height: 8dvh;
-    padding: 22px 16px;
-  }
-  
-  /* Style the tab */
-  .tab {
-    float: left;
-    border: none;
-    background-color: black; /* Change background color to black */
-    width: 20%;
-    height: 80dvh;
-    color: white; /* Change text color to white */
-  }
-  
-  /* Style the buttons that are used to open the tab content */
-  .tab button {
-    display: block;
-    background-color: inherit; /* Keep the black background of the tab */
-    color: white; /* Text color white */
-    padding: 22px 16px;
-    width: 100%;
-    text-align: left;
-    border: none;
-    cursor: pointer; 
-  }
-  
-  /* Change background color of buttons on hover */
-  .tab button:hover {
-    background-color: #444; /* Darker background on hover */
-  }
-  
-  /* Create an active/current "tab button" class */
-  .tab button.active {
-    background-color: #666; /* Slightly lighter background for active tab */
-  }
-  
-  /* Style the tab content */
-  .tabcontent {
-    background-color: #000000;
-    color: #ccc;
-    flex: 1; /* Content takes up the remaining space */
-    padding: 20px 12px;
-    font-family: Arial, sans-serif; /* Set font family */
-    font-size: 16px; /* Set font size */
-    border: none;
-    border-left: none;
-    height: 80dvh; /* Fill the height of the container */
-    display: none; /* Initially hidden */
-    overflow-y: auto; /* Enable scrolling for content if it's long */
-    text-align: center;
+.header {
+  background-color: inherit;
+  color: white;
+  height: 8dvh;
+  padding: 22px 16px;
+}
+
+/* Style the tab */
+.tab {
+  float: left;
+  border: none;
+  background-color: black;
+  /* Change background color to black */
+  width: 20%;
+  height: 80dvh;
+  color: white;
+  /* Change text color to white */
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  display: block;
+  background-color: inherit;
+  /* Keep the black background of the tab */
+  color: white;
+  /* Text color white */
+  padding: 22px 16px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #444;
+  /* Darker background on hover */
+}
+
+/* Create an active/current "tab button" class */
+.tab button.active {
+  background-color: #666;
+  /* Slightly lighter background for active tab */
+}
+
+/* Style the tab content */
+.tabcontent {
+  background-color: #000000;
+  color: #ccc;
+  flex: 1;
+  /* Content takes up the remaining space */
+  padding: 20px 12px;
+  font-family: Arial, sans-serif;
+  /* Set font family */
+  font-size: 16px;
+  /* Set font size */
+  border: none;
+  border-left: none;
+  height: 80dvh;
+  /* Fill the height of the container */
+  display: none;
+  /* Initially hidden */
+  overflow-y: auto;
+  /* Enable scrolling for content if it's long */
+  text-align: center;
 }
 
 .tabcontent input {
-    width: 20%; /* Make the input span the full width of its container */
-    height: 40px;
-    padding: 10px; /* Add padding inside the input field for better spacing */
-    font-size: 16px; /* Set the font size of the text */
-    background-color: #363636; /* Dark background for the input field */
-    color: white; /* White text color */
-    border: 1px solid #000000; /* Light border around the input */
-    border-radius: 5px;
-    margin-right: 20px; /* Increase space between input and button */
+  width: 20%;
+  /* Make the input span the full width of its container */
+  height: 40px;
+  padding: 10px;
+  /* Add padding inside the input field for better spacing */
+  font-size: 16px;
+  /* Set the font size of the text */
+  background-color: #363636;
+  /* Dark background for the input field */
+  color: white;
+  /* White text color */
+  border: 1px solid #000000;
+  /* Light border around the input */
+  border-radius: 5px;
+  margin-right: 20px;
+  /* Increase space between input and button */
 }
 
 .tabcontent button {
-    background-color: #221422;
-    width: 20%;
-    height: 40px;
-    color: white; 
-    border: 1px solid #000000;
-    border-radius: 5px; /* Rounded corners for the button */
-    cursor: pointer; /* Change cursor to pointer when hovering over the button */
-    margin-left: 20px; /* Add space above the button */
+  background-color: #221422;
+  width: 20%;
+  height: 40px;
+  color: white;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  /* Rounded corners for the button */
+  cursor: pointer;
+  /* Change cursor to pointer when hovering over the button */
+  margin-left: 20px;
+  /* Add space above the button */
 }
+
 /* 
 #pong {
 	width: 100%;
 } */
 
-#gameStatus{
-    height: 10dvh;
-    background-color: #000000;
-    text-align: center;
-    font-family: verdana;
-    font-size:  clamp(12px, 40px, 64px); /* (12px - minimum, 40px - default, 64px - maximum); or leave font-size: 300%*/;
-    margin-top: 4dvh;
+#gameStatus {
+  height: 10dvh;
+  background-color: #000000;
+  text-align: center;
+  font-family: verdana;
+  font-size: clamp(12px, 40px, 64px);
+  /* (12px - minimum, 40px - default, 64px - maximum); or leave font-size: 300%*/
+  ;
+  margin-top: 4dvh;
 }
 
-  #messages {
-    margin-top: 1rem;
-    padding: 1rem;
-    color: #ffffff;
-    background-color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    height: 50dvh;
-    overflow-y: auto; 
-    text-align: left;
-  }
-  #messageInput {
-    padding: 5px;
-    margin: 5px 0;
-    width: 50dvh;
-    background-color: #363636;
-  }
+#messages {
+  margin-top: 1rem;
+  padding: 1rem;
+  color: #ffffff;
+  background-color: rgb(0, 0, 0);
+  border: 1px solid #ccc;
+  height: 50dvh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+#messageInput {
+  padding: 5px;
+  margin: 5px 0;
+  width: 50dvh;
+  background-color: #363636;
+}
 
 
+/*PROFILE PAGE!*/
 
-  /*Class Selector (.class):
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  gap: 14px;
+}
+
+.profilePhoto {
+  grid-row: span 2 / span 2;
+}
+
+.profilePhoto img {
+  vertical-align: middle;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  margin-left: 0;
+  margin-top: 0;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.usernameField {
+  background-color: #2c2c2c;
+  border-radius: 5px;
+  grid-column-start: 1;
+  grid-row-start: 3;
+}
+
+.logout {
+  grid-row-start: 4;
+}
+
+.statistics {
+  background-color: #2c2c2c;
+  border-radius: 5px;
+  grid-column: span 4 / span 4;
+  grid-row: span 4 / span 4;
+  grid-column-start: 2;
+  grid-row-start: 1;
+}
+
+
+/*Class Selector (.class):
 
 Used for styling multiple elements that share the same class.
 

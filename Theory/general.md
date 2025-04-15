@@ -32,6 +32,10 @@ There are two types of modules in JS (ways to import and export code):
 - ES modules (new way of im-/exporting)
     import varName from 'locationName' 
 
+
+npm (node package manager) is the dependency/package manager you get out of the box when you install Node.js.
+npx is also a CLI tool whose purpose is to make it easy to install and manage dependencies hosted in the npm registry.
+
 ### Start working:
 Initialize a Node.js Project in the Folder:  npm init -y
 npm install fastify@4
