@@ -11,11 +11,65 @@
 
 .header {
   background-color: inherit;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(1, 1fr);
   color: white;
-  height: 8dvh;
+  height: 10dvh;
   padding: 22px 16px;
 }
 
+.name{
+  font-size: clamp(12px, 40px, 64px);
+}
+.login{
+  text-align: right;
+  padding: 0px;
+  margin: 0px;
+}
+.header button {
+  align-items: right;
+  width: 20%;
+  height: 40px;
+  color: white;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  /* Rounded corners for the button */
+  cursor: pointer;
+  /* Change cursor to pointer when hovering over the button */
+  /* Add space above the button */
+}
+
+#login {
+  background-color: #444; /* Blue */
+  color: white;
+  border: none;
+
+  border-radius: 6px;
+  cursor: pointer;
+
+}
+
+#login:hover {
+  background-color: #666;
+  width: 30%;
+  height: 60px;
+}
+
+#register {
+  background-color: #221422; /* Green */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#register:hover {
+
+  background-color: #3b233b;
+  width: 30%;
+  height: 60px;
+}
 /* Style the tab */
 .tab {
   float: left;
@@ -147,6 +201,7 @@
 /*PROFILE PAGE!*/
 
 .profileGrid {
+  width:80%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);
@@ -159,6 +214,7 @@
 
 .profilePhoto img {
   vertical-align: middle;
+  border: 2px solid #ffffff;
   width: 300px;
   height: 300px;
   border-radius: 50%;

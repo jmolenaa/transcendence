@@ -10,14 +10,19 @@
 
 <body>
   <div class="header">
-    <h1>Pong Game</h1>
-  </div>
+    <div class="name">Pong Game</div>
+    <div class="login">
+      <button id="login">Login</button>
+      <button id="register">Register</button>
+    </div>
+    </div>
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
     <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
     <button class="tablinks" onclick="openTab(event, 'Tournament')">Tournament</button>
-    <button class="tablinks" onclick="openTab(event, 'Login')">Login</button>
-    <button class="tablinks" onclick="openTab(event, 'Profile')" id="defaultOpen">Profile</button>
+    <!-- <button class="tablinks" onclick="openTab(event, 'Login')">Login</button> -->
+    <button class="tablinks" onclick="openTab(event, 'Profile')">Profile</button>  
+    <!-- ADD  style="display: none;" TO HIDE PROFILE PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
   </div>
   <div id="Game" class="tabcontent">
     <input type="text" id="player1" placeholder="Player 1">
@@ -64,12 +69,12 @@
 
       </div>
       <div class="usernameField">
-        <h1>Not Anna</h1> Here we gonna change user name
+        <h1>Not Anna</h1><br> Here we gonna change user name, show frieds
       </div>
       <div class="logout">
         <p><button class="logout" type="logout">Logout</button></p>
       </div>
-      <div class="statistics">Statistics, Tournament info and so on</div>
+      <div class="statistics"><br>Statistics, Tournament info, match history</div>
     </div>
   </div>
 
@@ -79,17 +84,27 @@
 </body>
 </html> -->
   <script>
+    let isLoggedIn = false;
     window.onload = function () {
       document.querySelector('.tablinks').click(); // Click the default tab
     };
+    document.getElementById('login').addEventListener('click', function(event) {
+      openTab(event, 'Login'); // Call your tab-opening function
+    });
 
+    document.getElementById('register').addEventListener('click', function(event) {
+      openTab(event, 'Login'); // You can change 'Login' to 'Register' if needed
+    });
     function openTab(event, tabName) {
+      if (tabName === "Profile" && !isLoggedIn) {
+        alert("Please log in to access your profile.");
+        return;
+      }
       // Hide all tab contents
       var tabcontent = document.getElementsByClassName("tabcontent");
       for (var i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
       }
-
       // Remove "active" class from all tab links
       var tablinks = document.getElementsByClassName("tablinks");
       for (var i = 0; i < tablinks.length; i++) {
@@ -100,7 +115,10 @@
       document.getElementById(tabName).style.display = "block";
       // Add "active" class to clicked tab
       event.currentTarget.className += " active";
-      // document.getElementById("defaultOpen").click(); /*CHANGE*/
+
+
+
+      // document.getElementById("defaultOpen").click(); /*WORK ON 1 TAB*/
 
 
       // Handle specific tab logic
@@ -129,6 +147,15 @@
             if (!response.ok) {
               return;
             }
+
+            //open profile page
+            isLoggedIn = true;
+            document.querySelector("button.tablinks[onclick*='Profile']").style.display = "inline-block";
+            openTab({ currentTarget: document.querySelector("button.tablinks[onclick*='Profile']") }, "Profile");
+
+            //hide login button
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('register').style.display = 'none';
             const data = await response.json();
             // Redirect or update UI after successful login
             // Example: Show user profile or navigate to another page
@@ -197,18 +224,20 @@
 
       /*Logout*/
       const logout = document.querySelector('.logout').addEventListener('click', function () {
-        alert("Logout");
         fetch('/api/auth/logout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          credentials: 'include' // Include cookies in the request
+          credentials: 'include', // Include cookies in the request
+          body: JSON.stringify({})
         })
           .then(response => {
             if (response.ok) {
-              // Redirect to the login page or show a success message
-              // window.location.href = '/login'; // Redirect to the login page
+              document.querySelector("button.tablinks[onclick*='Profile']").style.display = "none";
+              openTab({ currentTarget: document.querySelector("button.tablinks[onclick*='Game']") }, "Game");
+              document.getElementById('login').style.display = 'inline-block';
+              document.getElementById('register').style.display = 'inline-block';
             } else {
               console.error('Logout failed');
             }
@@ -285,3 +314,10 @@ appendChild() is a method that adds a new child element (or node) to a parent el
 In this case, pongScript is the child that we are adding, and the parent is document.head.
 
 pongScript is the dynamically created <script> element that has the src set to "../src/pong.js". This tells the browser to load the JavaScript file located at that path. -->
+
+
+
+
+
+
+  <!-- https://codepen.io/pen/ -->
