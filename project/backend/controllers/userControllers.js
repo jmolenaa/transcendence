@@ -78,7 +78,7 @@ const loginHandler = async(request, reply) => {
 		secure: true,
 		sameSite: 'Strict',  // Prevents cross-site request forgery attacks
 		path: '/',  // Cookie is available on all routes
-		expires: 7 * 24 * 60 * 60, // 7 days
+		expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
 	});
 	return reply.status(201).send({ message: 'Registration successful' });
 }
@@ -118,7 +118,8 @@ const registerHandler = async (request, reply) => {
 const googleHandler = async(request, reply) => {
 	//https://github.com/googleapis/google-api-nodejs-client
 	//https://developers.google.com/identity/protocols/oauth2
-
+	// GOOGLE auth implementation:
+	// https://dev.to/fozooni/google-oauth2-with-fastify-typescript-from-scratch-1a57
 	//Theory?
 };
 
@@ -149,6 +150,22 @@ const profileHandler = (request, reply) => {
 	}
 }
 
+const verificationHandler = async(request, reply) => {
+	console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');	
+	const token = await request.cookies.token;
+	if (!token) {
+		return reply.code(401).send({ error: 'Not authorized' });
+	}
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		reply.send({ user: decoded });
+	} catch (err) {
+		console.error('Token verification error:', err);
+		reply.code(401).send({ error: 'Invalid token' });
+	}
+
+}
+
 
 export default {
     getAllUsersHandler,
@@ -159,7 +176,8 @@ export default {
 	loginHandler,
 	registerHandler,
 	logoutHandler,
-	profileHandler
+	profileHandler,
+	verificationHandler,
 
 };
 

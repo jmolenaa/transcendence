@@ -38,7 +38,14 @@ fastify.get('/', (request, reply) => {
 });
   // Register all routes
 fastify.register(cookie, {});
+
 fastify.register(userRoutes);
+
+
+//DEBUGGING!
+// fastify.ready(() => {
+//   console.log(fastify.printRoutes());
+// });
 
 // fastify.addHook('onRequest', async (req, res) => {
 //   console.log('[Request]', req.method, req.url);

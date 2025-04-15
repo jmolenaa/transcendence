@@ -12,6 +12,10 @@ export default async function userRoutes(fastify) {
     fastify.get('/ws', { websocket: true }, websocket.getWebsocketHandler);
 
 	//Auth:
+    fastify.ready().then(() => {
+        console.log(fastify.printRoutes());
+      });
+    fastify.get('/api/auth/verify', userControllers.verificationHandler);
 	fastify.post('/api/auth/login', userControllers.loginHandler);
 	fastify.post('/api/auth/register', userControllers.registerHandler);
 	fastify.post('/api/auth/logout', userControllers.logoutHandler);// ??
@@ -26,3 +30,7 @@ export default async function userRoutes(fastify) {
     //Profile only for logged in
     fastify.get('/api/profile', userControllers.profileHandler);
 }
+
+
+
+//Create a middleware hook to check for authenticated users (via session or token) and protect routes like /game, /profile, etc. - What is it????

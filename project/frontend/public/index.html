@@ -15,14 +15,14 @@
       <button id="login">Login</button>
       <button id="register">Register</button>
     </div>
-    </div>
+  </div>
   <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
     <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
     <button class="tablinks" onclick="openTab(event, 'Tournament')">Tournament</button>
     <!-- <button class="tablinks" onclick="openTab(event, 'Login')">Login</button> -->
-    <button class="tablinks" onclick="openTab(event, 'Profile')">Profile</button>  
-    <!-- ADD  style="display: none;" TO HIDE PROFILE PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <button class="tablinks" onclick="openTab(event, 'Profile' )">Profile</button>
+    <!-- ADD/HIDE  style="display: none;" TO HIDE PROFILE PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
   </div>
   <div id="Game" class="tabcontent">
     <input type="text" id="player1" placeholder="Player 1">
@@ -85,16 +85,25 @@
 </html> -->
   <script>
     let isLoggedIn = false;
-    window.onload = function () {
+    window.onload = async function () {
+      //Check if logged in
+      verifyLogin();
       document.querySelector('.tablinks').click(); // Click the default tab
     };
-    document.getElementById('login').addEventListener('click', function(event) {
+    document.getElementById('login').addEventListener('click', function (event) {
       openTab(event, 'Login'); // Call your tab-opening function
     });
-
-    document.getElementById('register').addEventListener('click', function(event) {
+    document.getElementById('register').addEventListener('click', function (event) {
       openTab(event, 'Login'); // You can change 'Login' to 'Register' if needed
     });
+    
+        if (isLoggedIn){
+          document.getElementById('login').style.display = 'none';
+          document.getElementById('register').style.display = 'none';
+      }
+
+
+    // Function to open tabs
     function openTab(event, tabName) {
       if (tabName === "Profile" && !isLoggedIn) {
         alert("Please log in to access your profile.");
@@ -118,7 +127,7 @@
 
 
 
-      // document.getElementById("defaultOpen").click(); /*WORK ON 1 TAB*/
+      // document.getElementById("defaultOpen").click(); /*IF WORK ON 1 TAB*/
 
 
       // Handle specific tab logic
@@ -199,52 +208,52 @@
           }
         });
       }
-    
-
-    /*PROFILE PART*/
-    if (tabName === 'Profile') {
-      const defaultAvatar = document.getElementById("defaultAvatar");
-      const fileInput = document.getElementById("fileInput");
-
-      // When the image is clicked, trigger the file input
-      defaultAvatar.addEventListener("click", function () {
-        fileInput.click();
-      });
-      fileInput.addEventListener("change", function (event) {
-        const file = event.target.files[0]; //get the selected file
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            defaultAvatar.src = e.target.result; // Set the image source to the selected file
-          };
-          reader.readAsDataURL(file);
-        }
-      });
 
 
-      /*Logout*/
-      const logout = document.querySelector('.logout').addEventListener('click', function () {
-        fetch('/api/auth/logout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include', // Include cookies in the request
-          body: JSON.stringify({})
-        })
-          .then(response => {
-            if (response.ok) {
-              document.querySelector("button.tablinks[onclick*='Profile']").style.display = "none";
-              openTab({ currentTarget: document.querySelector("button.tablinks[onclick*='Game']") }, "Game");
-              document.getElementById('login').style.display = 'inline-block';
-              document.getElementById('register').style.display = 'inline-block';
-            } else {
-              console.error('Logout failed');
-            }
+      /*PROFILE PART*/
+      if (tabName === 'Profile') {
+        const defaultAvatar = document.getElementById("defaultAvatar");
+        const fileInput = document.getElementById("fileInput");
+
+        // When the image is clicked, trigger the file input
+        defaultAvatar.addEventListener("click", function () {
+          fileInput.click();
+        });
+        fileInput.addEventListener("change", function (event) {
+          const file = event.target.files[0]; //get the selected file
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              defaultAvatar.src = e.target.result; // Set the image source to the selected file
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+
+        /*Logout*/
+        const logout = document.querySelector('.logout').addEventListener('click', function () {
+          fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include', // Include cookies in the request
+            body: JSON.stringify({})
           })
-      })
+            .then(response => {
+              if (response.ok) {
+                document.querySelector("button.tablinks[onclick*='Profile']").style.display = "none";
+                openTab({ currentTarget: document.querySelector("button.tablinks[onclick*='Game']") }, "Game");
+                document.getElementById('login').style.display = 'inline-block';
+                document.getElementById('register').style.display = 'inline-block';
+              } else {
+                console.error('Logout failed');
+              }
+            })
+        })
+      }
     }
-  }
 
     // Load the game script if not already loaded
     function loadGameScript() {
@@ -298,6 +307,25 @@
       }
     }
 
+
+
+    const verifyLogin = async () => {
+      try {
+        const response = await fetch('/api/auth/verify', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include' // Include cookies in the request
+        });
+        if (response.ok) {
+          isLoggedIn = true;
+        
+        }
+      } catch (err) {
+        console.error('Login verification failed:', err);
+      }
+    };
   </script>
 </body>
 
@@ -320,4 +348,7 @@ pongScript is the dynamically created <script> element that has the src set to "
 
 
 
-  <!-- https://codepen.io/pen/ -->
+<!-- https://codepen.io/pen/ 
+   
+  https://cssgridgenerator.io/ 
+  -->

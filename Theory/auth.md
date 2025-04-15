@@ -222,3 +222,12 @@ Step	Description
 5.	Token is stored in an HTTP-only, secure cookie
 6.	Frontend gets a "Registration successful" message
 7.	Browser sends JWT cookie automatically on future requests for protected pages
+
+
+GOOGLE auth implementation:
+https://dev.to/fozooni/google-oauth2-with-fastify-typescript-from-scratch-1a57
+
+
+JWT (JSON Web Token) — открытый стандарт, описанный в RFC 7519. Определяет компактный способ для передачи информации между сторонами в виде JSON-объекта. Токены создаются сервером, подписываются секретным ключом и передаются клиенту. Access token — это ключ доступа к защищенному ресурсу, обычно с коротким сроком жизни, а refresh token позволяет запросить новый access и имеет длинный ttl.
+
+OAuth 2.0 — это фреймворк/протокол авторизации, который описывает, каким образом реализовывать взаимодействие между сервисами для обеспечения стороннему приложению безопасной авторизации и ограничения доступа к ресурсам. 
