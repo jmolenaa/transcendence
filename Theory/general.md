@@ -61,3 +61,49 @@ Step 3: Store your secret in .env as JWT_SECRET=your-secret-key.
 Step 4: Access the secret using process.env.JWT_SECRET.
 
 Step 5: Use the secret securely without hardcoding it in your code.
+
+
+
+
+Exports:
+🔹 Named Export
+You're saying: “I’m exporting a function/variable/class with a name, and it must be imported with that exact name (or aliased).”
+
+Example: utils.js
+// Named export
+export function handleError() {
+  console.log("Handling error...");
+}
+
+Usage:
+import { handleError } from './utils.js'; // ✅ Works
+✔️ You must use {} and the exact name (handleError in this case).
+
+You can also rename it:
+import { handleError as customErrorHandler } from './utils.js';
+
+
+
+🔹 Default Export
+You're saying: “I’m exporting one main thing — import it without needing curly braces.”
+
+Example: utils.js
+// Default export
+export default function handleError() {
+  console.log("Handling error...");
+}
+Usage:
+import handleError from './utils.js'; // ✅ Works — no curly braces!
+✔️ You can name the import whatever you want, since it's the default.
+
+import myCoolErrorHandler from './utils.js'; // also valid
+
+
+✅ When to Use Each?
+Use named exports when:
+
+You have multiple exports from a file (add(), subtract(), handleError(), etc.).
+
+Use default export when:
+
+The file only exports one main thing (a class, or a single core function).

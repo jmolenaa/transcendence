@@ -15,6 +15,7 @@ dotenv.config();   // loads environment variables from the .env file and makes t
 //Cant find JWT IN process.env
 console.log('JWT_SECRET:', process.env.JWT_SECRET); // Log the JWT_SECRET for debugging
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const port = 3000;
@@ -32,13 +33,19 @@ fastify.register(fastifyStatic, {
   prefix: '/src/',  // Serve JS files under the /src/ path (e.g., /src/pong.js, /src/players.js)
   decorateReply: false,
 });
+
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, 'uploads'),
+  prefix: '/uploads/',  // Serve JS files under the /src/ path (e.g., /src/pong.js, /src/players.js)
+  decorateReply: false,
+});
 // Serve index.html
 fastify.get('/', (request, reply) => {
   reply.sendFile('index.html');
 });
-  // Register all routes
 fastify.register(cookie, {});
 
+// Register all routes
 fastify.register(userRoutes);
 
 
@@ -47,9 +54,13 @@ fastify.register(userRoutes);
 //   console.log(fastify.printRoutes());
 // });
 
+
+//WHAT ARE HOOKS?
 // fastify.addHook('onRequest', async (req, res) => {
 //   console.log('[Request]', req.method, req.url);
 // });
+
+
 fastify.listen({ port }, (err, address) => {
   if (err) {
     fastify.log.error(err);
@@ -57,9 +68,14 @@ fastify.listen({ port }, (err, address) => {
   }
 });
 
+
+
 //run: npx nodemon index.js
 //rm -rf node_modules package-lock.json && npm init -y && npm install fastify fastify-static nodemon ws websocket better-sqlite3
 
 
 //if native module version mismatch — your better-sqlite3 was compiled with a different Node.js version than the one you're currently using: 
 // npm rebuild better-sqlite3
+
+
+//run npm start - it will run nodemon and python script for database at the same time

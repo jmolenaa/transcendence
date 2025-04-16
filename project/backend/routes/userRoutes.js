@@ -1,4 +1,5 @@
 import userControllers from '../controllers/userControllers.js';
+import authControllers from '../controllers/authControllers.js';
 import websocket from '../plugins/websocket.js';
 
 export default async function userRoutes(fastify) {
@@ -12,23 +13,25 @@ export default async function userRoutes(fastify) {
     fastify.get('/ws', { websocket: true }, websocket.getWebsocketHandler);
 
 	//Auth:
+    fastify.get('/api/auth/verify', authControllers.verificationHandler);
+	fastify.post('/api/auth/login', authControllers.loginHandler);
+	fastify.post('/api/auth/register', authControllers.registerHandler);
+	fastify.post('/api/auth/logout', authControllers.logoutHandler);// ??
+	// fastify.get('/api/auth/user', authControllers.getUserHandler); //??
+	// fastify.post('/api/auth/verify', authControllers.verifyHandler); //??
+    
+    //Google
+    // fastify.get('/api/auth/google', authControllers.googleHandler);
+    // fastify.get('/api/auth/callback', authControllers.callbackHandler);
+    
+    
+    //Profile only for logged in
+    fastify.get('/api/profile', userControllers.profileHandler);
+
+    
     fastify.ready().then(() => {
         console.log(fastify.printRoutes());
       });
-    fastify.get('/api/auth/verify', userControllers.verificationHandler);
-	fastify.post('/api/auth/login', userControllers.loginHandler);
-	fastify.post('/api/auth/register', userControllers.registerHandler);
-	fastify.post('/api/auth/logout', userControllers.logoutHandler);// ??
-	// fastify.get('/api/auth/user', userControllers.getUserHandler); //??
-	// fastify.post('/api/auth/verify', userControllers.verifyHandler); //??
-
-    //Google
-    // fastify.get('/api/auth/google', userControllers.googleHandler);
-    // fastify.get('/api/auth/callback', userControllers.callbackHandler);
-
-
-    //Profile only for logged in
-    fastify.get('/api/profile', userControllers.profileHandler);
 }
 
 

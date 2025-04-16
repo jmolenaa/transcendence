@@ -1,3 +1,5 @@
+import {handleError} from '../utils/utils.js';
+
 const clients = new Set();
 
 const getWebsocketHandler = (connection) => {

@@ -1,7 +1,5 @@
-import * as userServices  from '../services/userServices.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-const JWT_SECRET = "" + process.env.JWT_SECRET; //using environmental variable for JWT secret
+import * as authServices  from '../services/authServices.js';
+import {handleError} from '../utils/utils.js';
 
 const getAllUsersHandler = (request, reply) => {
     const users = getUsers();  // Retrieve all users from the database
@@ -51,86 +49,6 @@ const saveWinnerHandler = (request, reply) => {
     reply.send({ message: 'Game results saved', gameId });
 }
 
-
-const loginHandler = async(request, reply) => {
-	console.log('SECRET in Login:', process.env.JWT_SECRET);
-	const { email, password } = request.body;
-	if (!email || !password) {
-		return reply.status(400).send({ error: 'Username and password are required' });
-	}
-	console.log('Incoming data in Login:', request.body);
-	const user = await userServices.checkCredentials(email);
-	console.log ("Password: ", user.password, password);
-	if (!user) {
-		console.log ("No user found");
-		return reply.status(401).send({ error: 'Invalid credentials' });
-	}
-	const isMatch = await bcrypt.compare(password, user.password);
-	if (!isMatch) {
-		console.log ("Password does not match");
-		return reply.status(401).send({ error: 'Invalid credentials' });
-	}
-	const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' });
-	// const token = reply.jwt.sign({ email }, { expiresIn: '1h' });
-	// Set the JWT in an HTTP-only cookie
-	reply.setCookie('token', token, {
-		httpOnly: true,  // Ensures it's not accessible via JavaScript
-		secure: true,
-		sameSite: 'Strict',  // Prevents cross-site request forgery attacks
-		path: '/',  // Cookie is available on all routes
-		expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
-	});
-	return reply.status(201).send({ message: 'Registration successful' });
-}
-
-const registerHandler = async (request, reply) => {
-	const { email, password, username } = request.body;
-	console.log('Incoming data:', { email, username , password});
-
-	if (!email || !password || !username) {
-		return reply.status(400).send({ error: 'Email, password and username are required' });
-	}
-
-	try {
-		// const hashedPassword = await bcrypt.hash(password, 10);
-		const registerUser = userServices.registerInDatabase(email, password, username);
-
-		if (!registerUser) {
-			return reply.status(500).send({ error: 'Registration failed' });
-		}
-		// DO I NEED TOKEN HERE????????????????????
-		// const token = fastify.jwt.sign({ email, username }, JWT_SECRET, { expiresIn: '1h' });
-		// // Set the JWT in an HTTP-only cookie
-		// reply.setCookie('token', token, {
-		// 	httpOnly: true,  // Ensures it's not accessible via JavaScript
-		// 	secure: true,
-		// 	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
-		// 	path: '/',  // Cookie is available on all routes
-		// 	expires: 7 * 24 * 60 * 60, // 7 days
-		// });
-		return reply.status(201).send({ message: 'Registration successful' });
-	} catch (err) {
-		console.error('Registration error:', err);
-		reply.status(500).send({ error: 'Something went wrong on the server' });
-	}
-};
-
-const googleHandler = async(request, reply) => {
-	//https://github.com/googleapis/google-api-nodejs-client
-	//https://developers.google.com/identity/protocols/oauth2
-	// GOOGLE auth implementation:
-	// https://dev.to/fozooni/google-oauth2-with-fastify-typescript-from-scratch-1a57
-	//Theory?
-};
-
-
-const logoutHandler = async(request, reply) => {
-//API response:
-	reply.clearCookie('token', {path: '/'});
-	reply.send({ message: 'Logged out successfully' });
-}
-
-
 const profileHandler = (request, reply) => {
 	const token = request.cookies.token;
 	if (!token){
@@ -150,22 +68,6 @@ const profileHandler = (request, reply) => {
 	}
 }
 
-const verificationHandler = async(request, reply) => {
-	console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');	
-	const token = await request.cookies.token;
-	if (!token) {
-		return reply.code(401).send({ error: 'Not authorized' });
-	}
-	try {
-		const decoded = jwt.verify(token, JWT_SECRET);
-		reply.send({ user: decoded });
-	} catch (err) {
-		console.error('Token verification error:', err);
-		reply.code(401).send({ error: 'Invalid token' });
-	}
-
-}
-
 
 export default {
     getAllUsersHandler,
@@ -173,21 +75,6 @@ export default {
     deleteUserHandler,
     addingPlayersHandler,
     saveWinnerHandler,
-	loginHandler,
-	registerHandler,
-	logoutHandler,
 	profileHandler,
-	verificationHandler,
-
 };
 
-// Plan:
-
-// 4. Handle JWT Expiration:
-// Since your JWT expires in 1 hour (expiresIn: '1h'), you'll want to handle token expiration 
-// on the frontend. After the token expires, you can prompt the user to log in again or implement 
-// a refresh token mechanism to extend their session.
-
-// Refresh Tokens: A refresh token is a long-lived token that is used to obtain a new JWT when 
-// the original expires. You can implement this by issuing a refresh token alongside the access token (JWT) 
-// and store the refresh token in the database.
