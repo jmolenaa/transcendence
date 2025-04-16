@@ -68,6 +68,13 @@ const profileHandler = (request, reply) => {
 	}
 }
 
+const uploadAvatarHandler = async(request, reply) => {
+    // const data = request.file();
+    // if (!data)
+    //     return reply.status(400).send({ error: 'Avatar is required' });
+    // const filePath  = Path2D.join (__dirname, '../uploads', data.filename);
+}
+
 
 export default {
     getAllUsersHandler,
@@ -76,5 +83,6 @@ export default {
     addingPlayersHandler,
     saveWinnerHandler,
 	profileHandler,
+    uploadAvatarHandler,
 };
 

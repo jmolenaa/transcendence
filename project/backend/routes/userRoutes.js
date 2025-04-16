@@ -8,12 +8,12 @@ export default async function userRoutes(fastify) {
     fastify.post('/api/users', userControllers.createUserHandler);
     fastify.post('/api/players', userControllers.addingPlayersHandler);
     fastify.post('/api/winner', userControllers.saveWinnerHandler);
-
+    fastify.post('api/upload-avatar', userControllers.uploadAvatarHandler);
     //Chat:
     fastify.get('/ws', { websocket: true }, websocket.getWebsocketHandler);
 
 	//Auth:
-    fastify.get('/api/auth/verify', authControllers.verificationHandler);
+    fastify.get('/api/auth/me', authControllers.verificationHandler);
 	fastify.post('/api/auth/login', authControllers.loginHandler);
 	fastify.post('/api/auth/register', authControllers.registerHandler);
 	fastify.post('/api/auth/logout', authControllers.logoutHandler);// ??
@@ -28,7 +28,7 @@ export default async function userRoutes(fastify) {
     //Profile only for logged in
     fastify.get('/api/profile', userControllers.profileHandler);
 
-    
+    //DEBUGGING
     fastify.ready().then(() => {
         console.log(fastify.printRoutes());
       });

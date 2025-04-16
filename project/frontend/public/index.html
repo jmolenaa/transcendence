@@ -84,6 +84,7 @@
 </body>
 </html> -->
   <script>
+    let user = null
     let isLoggedIn = false;
     window.onload = async function () {
       //Check if logged in
@@ -329,7 +330,7 @@
 
     const verifyLogin = async () => {
       try {
-        const response = await fetch('/api/auth/verify', {
+        const response = await fetch('/api/auth/me', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -338,7 +339,8 @@
         });
         if (response.ok) {
           isLoggedIn = true;
-        
+          let user  = await response.json();
+          console.log("User data:", user);
         }
       } catch (err) {
         console.error('Login verification failed:', err);
@@ -370,8 +372,8 @@ pongScript is the dynamically created <script> element that has the src set to "
    
   https://cssgridgenerator.io/ 
   -->
-
+<!-- 
 
 
   //TODO create fetch(api/mi) and according to that recieve stats for frontend
-  //TODO save avatar in backend(no need to use database), return the path and in html add choice between default and the path
+  //TODO save avatar in backend(no need to use database), return the path and in html add choice between default and the path -->
