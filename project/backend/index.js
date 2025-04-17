@@ -5,7 +5,7 @@ import userRoutes from './routes/userRoutes.js';
 import  fastifyWebSocket from '@fastify/websocket';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-// import jwt from 'jsonwebtoken';
+import fastifyMultipart from '@fastify/multipart';
 import dotenv from 'dotenv';
 import cookie from '@fastify/cookie';
 dotenv.config();   // loads environment variables from the .env file and makes them accessible in process.env.
@@ -18,9 +18,16 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET); // Log the JWT_SECRET for de
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const port = 3000;
+const port = 3000; //TODO do we need to do something with port?
+
+console.log("File name in index.js:", __filename); // Debugging
+
+console.log("Dirname name in index.js:", __dirname); // Debugging
+
+
 
 const fastify = Fastify({ logger: true });
+fastify.register(fastifyMultipart);
 fastify.register(fastifyWebSocket);
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../frontend/public'),
@@ -48,7 +55,6 @@ fastify.register(cookie, {});
 // Register all routes
 fastify.register(userRoutes);
 
-
 //DEBUGGING!
 // fastify.ready(() => {
 //   console.log(fastify.printRoutes());
@@ -68,7 +74,7 @@ fastify.listen({ port }, (err, address) => {
   }
 });
 
-
+// https://medium.com/@adarshahelvar/navigating-file-paths-in-node-js-with-filename-and-dirname-1dd2656f8d7e
 
 //run: npx nodemon index.js
 //rm -rf node_modules package-lock.json && npm init -y && npm install fastify fastify-static nodemon ws websocket better-sqlite3

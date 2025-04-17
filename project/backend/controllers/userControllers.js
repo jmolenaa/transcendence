@@ -1,4 +1,4 @@
-import * as authServices  from '../services/authServices.js';
+import * as userServices  from '../services/userServices.js';
 import {handleError} from '../utils/utils.js';
 
 const getAllUsersHandler = (request, reply) => {
@@ -35,7 +35,7 @@ const addingPlayersHandler = (request, reply) => {
         return reply.status(400).send({ error: 'Both player names are required' });
     }
 
-    const userId = addPlayers(player1, player2);
+    const userId = userServices.addPlayers(player1, player2);
     reply.send({ message: 'Players added in Controllers', gameId: userId });
 }
 
@@ -50,6 +50,7 @@ const saveWinnerHandler = (request, reply) => {
 }
 
 const profileHandler = (request, reply) => {
+    console.log("Profile handler called"); // Debugging
 	const token = request.cookies.token;
 	if (!token){
 		return reply.code(401).send({error: "Not authorized"});
@@ -69,10 +70,13 @@ const profileHandler = (request, reply) => {
 }
 
 const uploadAvatarHandler = async(request, reply) => {
-    // const data = request.file();
-    // if (!data)
-    //     return reply.status(400).send({ error: 'Avatar is required' });
-    // const filePath  = Path2D.join (__dirname, '../uploads', data.filename);
+    const data = await request.file;
+    const filename = `avatar_${Date.now()}_${data.filename}`;
+    console.log("File name:", filename); // Debugging
+    const filepath = path.join(__dirname, 'uploads', filename);
+    await pump(data.file, fs.createWriteStream(filepath));
+    const avatarUrl = `/uploads/${filename}`;
+    return { success: true, avatar: avatarUrl };
 }
 
 
