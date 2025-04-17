@@ -52,7 +52,8 @@ function setupTabs() {
             
                 const showLoginBtn = document.getElementById("showLoginBtn");
                 const showSignupBtn = document.getElementById("showSignupBtn");
-                const flipToProfileBtn = document.getElementById("flipToProfileBtn");
+                const flipToProfileBtnLog = document.getElementById("flipToProfileBtnLog");
+                const flipToProfileBtnSign = document.getElementById("flipToProfileBtnSign");
                 const flipToLoginBtn = document.getElementById("flipToLoginBtn");
             
                 if (showLoginBtn) {
@@ -69,13 +70,21 @@ function setupTabs() {
                     });
                 }
             
-                if (flipToProfileBtn) {
-                    flipToProfileBtn.addEventListener('click', (event) => {
+                if (flipToProfileBtnLog) {
+                    flipToProfileBtnLog.addEventListener('click', (event) => {
                         event.preventDefault();
                         flipCard.classList.add("flipped");
                     });
                 }
-            
+                if (flipToProfileBtnSign) {
+                    flipToProfileBtnSign.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        flipCard.classList.add("flipped");
+                    });
+                }
+                if (flipCard) {
+                    flipCard.style.display = "block";
+                }
                 if (flipToLoginBtn) {
                     flipToLoginBtn.addEventListener('click', (event) => {
                         event.preventDefault();
@@ -90,8 +99,16 @@ function setupTabs() {
 
 
 
-window.onload = function () {
+window.onload = async function () {
     console.log('Page loaded');
+
+    //Adding test.html
+    const response = await fetch('test.html');
+    const html = await response.text();
+    document.getElementById('TestGame').innerHTML = html;
+
+
+    
     //setup default tab
     // const defaultTab = document.querySelector('.tablinks[data-tab="Game"]');
     // defaultTab.click();

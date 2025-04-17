@@ -1,0 +1,53 @@
+
+    <div class="card-container">
+      <div class="card" id="flipCard">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="form-buttons">
+              <button id="showLoginBtn">Login</button>
+              <button id="showSignupBtn">SignUp</button>
+            </div>
+            <form class="form-layout" id="loginTest">
+              <h3>Login</h3>
+              <input type="text" placeholder="Email">
+              <input type="password" placeholder="Password">
+              <button class="form-action-btn" id="flipToProfileBtnLog">Flip to Profile</button>
+            </form>
+  
+            <!-- Sign Up Form -->
+            <form class="form-layout" id="signupTest" style="display: none;">
+              <h3>Sign Up</h3>
+              <input type="text" placeholder="Email">
+              <input type="password" placeholder="Password">
+              <input type="text" placeholder="Username">
+              <button class="form-action-btn" id="flipToProfileBtnSign">Flip to Profile</button>
+            </form>
+          </div>
+          <div class="card-back">
+              <div class="profileGrid">
+                  <div class="profilePhoto">
+                      <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+                      <img id="defaultAvatar" src="/uploads/default_avatar.jpg" alt="Click to change avatar" />
+                    </div>
+                    <div class="usernameField">
+                        <h1>Not Anna</h1><br> Here we gonna change user name
+                    </div>
+                    <div class="friends">
+                        <h1>Friends</h1>
+                        <p>Not Anna</p>
+                        <p>Not Anna</p>
+                        <p>Not Anna</p>
+                    </div>
+                    <!-- <div class="logout">
+                        <p><button class="logout" type="logout">Logout</button></p>
+                    </div> -->
+                    <div class="statistics"><br>Statistics, Tournament info, match history</div>
+                </div>
+                <form class="form-layout">
+            <button class="form-action-btn" id="flipToLoginBtn">Flip to Login</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    
+    </div>

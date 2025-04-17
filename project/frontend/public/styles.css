@@ -200,14 +200,17 @@
 
 /*PROFILE PAGE!*/
 
-.profileGrid {
-  width:80%;
+/* .profileGrid {
+  width: 100%;
+  height: 600px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);
   gap: 14px;
 }
-
+.profileGrid > * {
+  border: 1px solid #ccc; /* Light grey border all around 
+}
 .profilePhoto {
   grid-row: span 2 / span 2;
 }
@@ -242,14 +245,13 @@
   grid-row: span 4 / span 4;
   grid-column-start: 2;
   grid-row-start: 1;
-}
+} */
 
 
 /* TESTS */
 
 .card-container {
   display: flex;
-
   justify-content: center;
   align-items: flex-start;
   height: 100vh;
@@ -258,8 +260,9 @@
 }
 
 .card {
-  width: 300px;
-  height: 400px;
+  width: 100%;
+  height: 60dvh;
+  /* background-color: #221422; */
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.8s ease-in-out;
@@ -275,16 +278,10 @@
 .card-front,
 .card-back {
   position: absolute;
-  background: rgba(0, 0, 0, 0.2); /* Transparent dark */
-  backdrop-filter: blur(6px); /* Optional: blur what's behind the card */
   color: white; /* Ensures text stands out */
-  border: 1px solid rgba(255, 255, 255, 0.3);
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -292,11 +289,12 @@
 }
 
 .card-back {
+  background-color: #000000;
   transform: rotateY(180deg);
 }
 
 .flipped .card-inner {
-  transform: rotateY(180deg) scale(1.5);
+  transform: rotateY(180deg);
 }
 
 .form-buttons {
@@ -305,10 +303,11 @@
   margin-bottom: 20px;
 }
 
+/* Login / Signup toggle buttons */
 .form-buttons button {
   flex: 1;
-  width: 100%;
-  margin: 5px 10px; /* Top and Bottom 10px, Left and Right 20px */
+  width: clamp(120px, 40%, 300px);
+  margin: 5px 10px;
   padding: 10px 30px;
   border: none;
   background: #4a90e2;
@@ -323,31 +322,124 @@
   background: #357ab8;
 }
 
-form {
-  display: flex;
+/* General form layout */
+form.form-layout {
+  display: flex; 
   flex-direction: column;
-  background-color: inherit;
+  width: clamp(120px, 80%, 400px);
+  margin: 20px auto; /* Center horizontally */
   gap: 10px;
+  background-color: inherit;
 }
 
-input {
-  padding: 10px 30px;
+/* Input fields */
+form.form-layout input {
+  width: 80%;
+  margin: 10px auto; /* Center horizontally */
+  padding: 10px 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
 
-form button {
+/* Action buttons inside forms */
+form button.form-action-btn {
+  margin: 20px auto; /* Center horizontally */
   background-color: #aaa;
   color: white;
-  padding: 10px;
+  width: 80%;
+  padding: 10px 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
 }
 
-form button:hover {
+form button.form-action-btn:hover {
   background-color: #357ab8;
 }
+
+
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  padding: 20px;
+}
+
+
+/* make borders for testing, delete */
+.profileGrid > * {
+  border: 1px solid #ccc;
+  padding: 10px;
+  color: white;
+}
+
+.profilePhoto {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profilePhoto img {
+  width: clamp(120px, 80%, 200px);
+  height: auto;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.statistics {
+  grid-column: span 3 / span 3;
+  grid-row: span 5 / span 5;
+  grid-column-start: 3;
+  grid-row-start: 1;
+  background-color: #000000;
+  border-radius: 8px;
+}
+
+.usernameField {
+  grid-column: span 2 / span 2;
+  grid-column-start: 1;
+  grid-row-start: 3;
+  background-color: #000000;
+  border-radius: 8px;
+}
+.friends{
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+  grid-column-start: 1;
+  grid-row-start: 4;
+}
+
+/* .logout {
+  grid-column: span 3 / span 3;
+  grid-column-start: 3;
+  grid-row-start: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+/* .logout button {
+  background-color: #4a90e2;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout button:hover {
+  background-color: #357ab8;
+} */
 
 
 

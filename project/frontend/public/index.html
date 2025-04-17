@@ -21,7 +21,7 @@
     <button class="tablinks" data-tab="Game">Game</button>
     <button class="tablinks" data-tab="Chat">Chat</button>
     <button class="tablinks" data-tab="Tournament">Tournament</button>
-    <button class="tablinks" data-tab="Profile">Profile</button>
+    <!-- <button class="tablinks" data-tab="Profile">Profile</button> -->
     <button class="tablinks" data-tab="TestGame">TestGame</button>
 
     <!-- <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
@@ -68,7 +68,7 @@
     </form>
     <div id="registerError" class="hidden">Invalid email or password</div>
   </div>
-  <div id="Profile" class="tabcontent">
+  <!-- <div id="Profile" class="tabcontent">
     <div class="profileGrid">
       <div class="profilePhoto">
         <input type="file" id="fileInput" accept="image/*" style="display: none;" />
@@ -82,41 +82,11 @@
       </div>
       <div class="statistics"><br>Statistics, Tournament info, match history</div>
     </div>
-  </div>
-  <div id="TestGame" class="tabcontent">
-      <div class="card-container">
-        <div class="card" id="flipCard">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="form-buttons">
-                <button id="showLoginBtn">Login</button>
-                <button id="showSignupBtn">Sign Up</button>
-              </div>
-              <form id="loginTest">
-                <h3>Login</h3>
-                <input type="text" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button id="flipToProfileBtn">Flip to Profile</button>
-              </form>
-              <form id="signupTest" style="display: none;">
-                <h3>Sign Up</h3>
-                <input type="text" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <input type="text" placeholder="Username">
-                <button id="flipToProfileBtn">Flip to Profile</button>
-              </form>
-            </div>
-            <div class="card-back">
-              <h2>Your Profile</h2>
-              <button id="flipToLoginBtn">Flip to Login</button>
-            </div>
-          </div>
-        </div>
-      
-      </div>
-  </div>
+  </div> -->
+  <div id="TestGame" class="tabcontent"></div>
   <!-- Main Script -->
-  <script type="module" src="./src/main.js"></script>
+  <script type="module" src="./src/main.js">
+  </script>
 </body>
 
 </html>
