@@ -4,7 +4,7 @@ const HEIGHT = 600;
 const PADDLE_HEIGHT = 100;
 let gameLoopStarted = false;
 const gameClients = new Set();
-let players = []; //for the names right now 1 and 2
+let players = []; //for the differentiating players right now 1 and 2
 
 
 function broadcastGameState() {
@@ -32,10 +32,22 @@ function broadcastGameState() {
     }
 }
 
+//setInterval(callback, delay, ...args);
+//updateBall(); Moves the ball, checks for collisions, updates the score, etc.
+
+//broadcastGameState(); Sends the updated game state to all connected clients via WebSocket.
+//delay - 60 FPS (frames per second).
+//setInterval returns an ID, which can be used to stop the interval later 
+// using clearInterval(intervalId).
+
+
+
+
 
 
 const startGameLoop = () => {
     console.log("Game loop started");
+    //can start only once, otherwise will be asynchronized
     if (!gameLoopStarted) {
         console.log("Game loop go to update");
         gameLoopStarted = true;
@@ -44,6 +56,10 @@ const startGameLoop = () => {
             updateBall();
             broadcastGameState();
         }, 1000 / 60);
+        // if (players.length === 0) {
+        //     clearInterval(gameLoopInterval);
+        //     gameLoopStarted = false;
+        // }
     }
 }
 
@@ -51,18 +67,23 @@ const startGameLoop = () => {
 
 const gameWebsocketHandler = (socket) => {
     console.log('New game client connected:', gameClients.size);
-
+    //add client to check for disconnections and send messages(changes)
     gameClients.add(socket);
 
+    // Check if the game is full (2 players)
     if (players.length > 2) {
         socket.send(JSON.stringify({ type: 'error', message: 'Game is full' }));
         socket.close();
         return;
     }
-    players.push(socket);
-    const playerId = players.indexOf(socket) + 1; //was: players.length + 1, but the problem if someone reconnects
 
-    socket.send(JSON.stringify({ type: 'playerId', playerId })); //send the player ID to the clienti
+    //otherwise, add the player to the game
+    players.push(socket);
+    const playerId = players.indexOf(socket) + 1; //was: players.length + 1, but the problem if someone reconnects, 
+    // //id might be the same
+
+    //send the player IDs
+    socket.send(JSON.stringify({ type: 'playerId', playerId })); //send the player ID to the client
     
     
     if (players.length === 2)
@@ -86,8 +107,10 @@ const gameWebsocketHandler = (socket) => {
     });
 
     socket.on('close', () => {
+        //first delete a client, and after that remove the player using filter method
+        //create new array and add there only players that are not equal to the socket
         gameClients.delete(socket);
-        players = players.filter(p => p !== socket); //delete the player, but how??????
+        players = players.filter(p => p !== socket); 
     });
 };
 

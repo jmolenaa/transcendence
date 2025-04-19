@@ -20,7 +20,7 @@ function resetBall() {
 }
 
 export function updateBall() {
-    console.log("Ball x: y: ", ballX, ballY);
+    // console.log("Ball x: y: ", ballX, ballY);
     ballX += ballSpeedX;
     ballY += ballSpeedY;
 
