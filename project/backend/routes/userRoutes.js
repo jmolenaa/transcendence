@@ -1,6 +1,8 @@
 import userControllers from '../controllers/userControllers.js';
 import authControllers from '../controllers/authControllers.js';
-import websocket from '../plugins/websocket.js';
+import websocket from '../plugins/websocketChat.js';
+import remote from '../plugins/websocketRemote.js';
+
 
 export default async function userRoutes(fastify) {
     fastify.get('/api/users', userControllers.getAllUsersHandler);
@@ -12,7 +14,7 @@ export default async function userRoutes(fastify) {
     //Chat:
     fastify.get('/ws/chat', { websocket: true }, websocket.chatWebsocketHandler);
     //Remote
-    fastify.get('/ws/game', { websocket: true }, websocket.gameWebsocketHandler);
+    fastify.get('/ws/game', { websocket: true }, remote.gameWebsocketHandler);
 
 	//Auth:
     fastify.get('/api/auth/me', authControllers.verificationHandler);
