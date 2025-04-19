@@ -3,6 +3,8 @@ import { openGameTab } from './game.js';
 import { openChatTab } from './chat.js';
 import { openTournamentTab } from './tournament.js';
 import { setupAuth } from './auth.js';
+import { openTestTab } from './test.js';
+import { openRemoteTab } from './remote.js';
 
 let user = null
 let isLoggedIn = false;
@@ -46,52 +48,10 @@ function setupTabs() {
                 openTournamentTab();
             }
             if (tabName === 'TestGame') {
-                const signup = document.getElementById("signupTest");
-                const login = document.getElementById("loginTest");
-                const flipCard = document.getElementById("flipCard");
-            
-                const showLoginBtn = document.getElementById("showLoginBtn");
-                const showSignupBtn = document.getElementById("showSignupBtn");
-                const flipToProfileBtnLog = document.getElementById("flipToProfileBtnLog");
-                const flipToProfileBtnSign = document.getElementById("flipToProfileBtnSign");
-                const flipToLoginBtn = document.getElementById("flipToLoginBtn");
-            
-                if (showLoginBtn) {
-                    showLoginBtn.addEventListener('click', () => {
-                        login.style.display = "flex";
-                        signup.style.display = "none";
-                    });
-                }
-            
-                if (showSignupBtn) {
-                    showSignupBtn.addEventListener('click', () => {
-                        login.style.display = "none";
-                        signup.style.display = "flex";
-                    });
-                }
-            
-                if (flipToProfileBtnLog) {
-                    flipToProfileBtnLog.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        flipCard.classList.add("flipped");
-                    });
-                }
-                if (flipToProfileBtnSign) {
-                    flipToProfileBtnSign.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        flipCard.classList.add("flipped");
-                    });
-                }
-                if (flipCard) {
-                    flipCard.style.display = "block";
-                }
-                if (flipToLoginBtn) {
-                    flipToLoginBtn.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        flipCard.classList.remove("flipped");
-                    });
-                }
-                console.log('TestGame tab opened');
+                openTestTab()
+            }
+            if (tabName === 'Remote') {
+                openRemoteTab();
             }
         });
     });
@@ -106,7 +66,10 @@ window.onload = async function () {
     const response = await fetch('test.html');
     const html = await response.text();
     document.getElementById('TestGame').innerHTML = html;
-
+    //Adding game.html
+    const responseRemote = await fetch('remote.html');   
+    const htmlRemote = await responseRemote.text();
+    document.getElementById('Remote').innerHTML = htmlRemote;
 
     
     //setup default tab

@@ -10,7 +10,9 @@ export default async function userRoutes(fastify) {
     fastify.post('/api/winner', userControllers.saveWinnerHandler);
     fastify.post('/api/upload-avatar', userControllers.uploadAvatarHandler);
     //Chat:
-    fastify.get('/ws', { websocket: true }, websocket.getWebsocketHandler);
+    fastify.get('/ws/chat', { websocket: true }, websocket.chatWebsocketHandler);
+    //Remote
+    fastify.get('/ws/game', { websocket: true }, websocket.gameWebsocketHandler);
 
 	//Auth:
     fastify.get('/api/auth/me', authControllers.verificationHandler);
@@ -23,6 +25,11 @@ export default async function userRoutes(fastify) {
     // fastify.get('/api/auth/google', authControllers.googleHandler);
     // fastify.get('/api/auth/callback', authControllers.callbackHandler);
     
+
+    // fastify.get('/api/remote', userControllers.remoteHandler);
+    // fastify.post('/api/remote', userControllers.remoteHandler);
+    // fastify.post('/api/remote/players', userControllers.remotePlayersHandler);
+    // fastify.post('/api/remote/winner', userControllers.remoteWinnerHandler); 
     
     //Profile only for logged in
     fastify.get('/api/profile', userControllers.profileHandler);
