@@ -107,3 +107,14 @@ You have multiple exports from a file (add(), subtract(), handleError(), etc.).
 Use default export when:
 
 The file only exports one main thing (a class, or a single core function).
+
+
+
+
+
+
+
+Operator	Purpose			Checks			Example			Result
+=			Assignment		—	let 		x = 10			x is 10
+==			Loose equality	Value			'5' == 5		true
+===			Strict equality Value & Type	'5' === 5		false

@@ -36,6 +36,13 @@ const startGameLoop = () => {
     }
 };
 
+function broadcastWaitingRoom(message) {
+    const stringifiedMessage = JSON.stringify(message);
+    for (const client of gameClients) {
+        if (client.readyState === 1)
+            client.send(stringifiedMessage);
+    }
+}
 
 
 const snakeWebsocketHandler = (socket) => {
@@ -52,11 +59,13 @@ const snakeWebsocketHandler = (socket) => {
     }));
 
     // Send waiting room list
-    // socket.send(JSON.stringify({
-    //     type: "waitingRoom",
-    //     players: players.map(p => ({ id: p.id }))
-    // }));
-    
+    broadcastWaitingRoom({
+        type: "waitingRoom",
+        //.map() is a JavaScript array method that goes through each element in an array and 
+        // creates a new array by applying a function to every element.
+        players: players.map(p => ({ id: p.id }))
+    });
+
 
     startGameLoop();
 
@@ -67,22 +76,36 @@ const snakeWebsocketHandler = (socket) => {
             if (newPlayer.id === 1) snake.movePlayer(data.key, 1);
             else if (newPlayer.id === 2) snake.movePlayer(data.key, 2);
         }
-        if (data.type === "waitingRoom") {
-            const waitingRoomMessage = JSON.stringify({
-                type: 'waitingRoom',
-                message: `Player ${newPlayer.id} is waiting for another player`
-            });
-            for (const client of gameClients) {
-                if (client.readyState === 1) {
-                    client.send(waitingRoomMessage);
-                }
+        if (data.type === 'gameInvitation') {
+            const { opponentId, inviterId } = data;
+            console.log(`Player ${inviterId} is inviting player ${opponentId} to play!`);
+            // Find the opponent's socket
+            const opponent = players.find(p => p.id === opponentId);
+            if (opponent) {
+                console.log(`Sending game invitation to player ${opponentId}`);
+                // Send game invitation to the opponent
+                opponent.socket.send(JSON.stringify({
+                    type: 'gameInvitationReceived',
+                    inviterId: inviterId,
+                    message: `Player ${inviterId} wants to play! Accept or deny the game.`
+                }));
             }
+        }
+        if (data.type === 'gameAccepted') {
+            const {inviterId, opponentId} = data;
+            console.log(`Player ${newPlayer.id} accepted the game invitation from player ${inviterId}`);
+            const inviter = players.find(p => p.id === inviterId);
+            const opponent = players.find(p => p.id === opponentId);
+            //snake.startGame();
         }
     });
 
     socket.on('close', () => {
         gameClients.delete(socket);
         players = players.filter(p => p.socket !== socket);
+        players.forEach((players, index) => {
+            players.id = index + 1;
+        });
 
         const disconnectMessage = JSON.stringify({
             type: 'playerDisconnected',
