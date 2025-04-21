@@ -1,14 +1,12 @@
 import * as snake from './snakeLogic.js';
-const WIDTH = 800;
-const HEIGHT = 600;
 
 let gameLoopStarted = false;
 const gameClients = new Set();
 let players = [];
 
 function broadcastGameState() {
-    const { 
-        leftPlayer, 
+    const {
+        leftPlayer,
         rightPlayer,
         apple } = snake.getGameState();
 
@@ -27,22 +25,12 @@ function broadcastGameState() {
     }
 }
 
-//setInterval(callback, delay, ...args);
-//updateBall(); Moves the ball, checks for collisions, updates the score, etc.
-
-//broadcastGameState(); Sends the updated game state to all connected clients via WebSocket.
-//delay - 60 FPS (frames per second).
-//setInterval returns an ID, which can be used to stop the interval later 
-// using clearInterval(intervalId).
-
-
-
 
 const startGameLoop = () => {
     if (!gameLoopStarted) {
         gameLoopStarted = true;
+
         setInterval(() => {
-            //snake.getRandomApplePosition(WIDTH, HEIGHT); // optionally only update on apple eaten
             broadcastGameState();
         }, 1000 / 10); // 10 FPS for Snake
     }
@@ -51,35 +39,61 @@ const startGameLoop = () => {
 
 
 const snakeWebsocketHandler = (socket) => {
+
     gameClients.add(socket);
-    if (players.length > 2) {
-        socket.send(JSON.stringify({ type: 'error', message: 'Game is full' }));
-        socket.close();
-        return;
-    }
 
-    //otherwise, add the player to the game
-    players.push(socket);
-    const playerId = players.indexOf(socket) + 1; //was: players.length + 1, but the problem if someone reconnects, 
-    // //id might be the same
+    const newPlayer = { id: players.length + 1, socket };
+    players.push(newPlayer);
 
-    //send the player IDs
-    socket.send(JSON.stringify({ type: 'playerId', playerId })); //send the player ID to the client
+    // Send player ID to the new client
+    socket.send(JSON.stringify({
+        type: 'playerId',
+        playerId: newPlayer.id
+    }));
+
+    // Send waiting room list
+    // socket.send(JSON.stringify({
+    //     type: "waitingRoom",
+    //     players: players.map(p => ({ id: p.id }))
+    // }));
     
 
     startGameLoop();
 
     socket.on('message', (message) => {
         const data = JSON.parse(message);
+        console.log("ID " + newPlayer.id);
         if (data.type === 'move') {
-            if (playerId === 1) snake.movePlayer(data.key, 1);
-            else if (playerId === 2) snake.movePlayer(data.key, 2);
+            if (newPlayer.id === 1) snake.movePlayer(data.key, 1);
+            else if (newPlayer.id === 2) snake.movePlayer(data.key, 2);
+        }
+        if (data.type === "waitingRoom") {
+            const waitingRoomMessage = JSON.stringify({
+                type: 'waitingRoom',
+                message: `Player ${newPlayer.id} is waiting for another player`
+            });
+            for (const client of gameClients) {
+                if (client.readyState === 1) {
+                    client.send(waitingRoomMessage);
+                }
+            }
         }
     });
 
     socket.on('close', () => {
         gameClients.delete(socket);
-        players = players.filter(p => p !== socket);
+        players = players.filter(p => p.socket !== socket);
+
+        const disconnectMessage = JSON.stringify({
+            type: 'playerDisconnected',
+            message: `Player ${newPlayer.id} disconnected`
+        });
+        for (const client of gameClients) {
+            if (client.readyState === 1) {
+                client.send(disconnectMessage);
+            }
+        }
+        snake.resetGame()
     });
 };
 
