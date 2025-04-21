@@ -2,6 +2,7 @@ import userControllers from '../controllers/userControllers.js';
 import authControllers from '../controllers/authControllers.js';
 import websocket from '../plugins/websocketChat.js';
 import remote from '../plugins/websocketRemote.js';
+import snake from '../plugins/websocketSnake.js';
 
 
 export default async function userRoutes(fastify) {
@@ -15,7 +16,8 @@ export default async function userRoutes(fastify) {
     fastify.get('/ws/chat', { websocket: true }, websocket.chatWebsocketHandler);
     //Remote
     fastify.get('/ws/game', { websocket: true }, remote.gameWebsocketHandler);
-
+    //Snake
+    fastify.get('/ws/snake', { websocket: true }, snake.snakeWebsocketHandler);
 	//Auth:
     fastify.get('/api/auth/me', authControllers.verificationHandler);
 	fastify.post('/api/auth/login', authControllers.loginHandler);

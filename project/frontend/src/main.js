@@ -5,6 +5,8 @@ import { openTournamentTab } from './tournament.js';
 import { setupAuth } from './auth.js';
 import { openTestTab } from './test.js';
 import { openRemoteTab } from './remote.js';
+import {openSnakeTab} from './snake.js';
+
 
 let user = null
 let isLoggedIn = false;
@@ -53,6 +55,10 @@ function setupTabs() {
             if (tabName === 'Remote') {
                 openRemoteTab();
             }
+            if (tabName === 'Snake') {
+                
+                openSnakeTab();
+            }
         });
     });
 }
@@ -70,7 +76,10 @@ window.onload = async function () {
     const responseRemote = await fetch('remote.html');   
     const htmlRemote = await responseRemote.text();
     document.getElementById('Remote').innerHTML = htmlRemote;
-
+    //Adding snake.html
+    const responseSnake = await fetch('snake.html');   
+    const htmlSnake = await responseSnake.text();
+    document.getElementById('Snake').innerHTML = htmlSnake;
     
     //setup default tab
     // const defaultTab = document.querySelector('.tablinks[data-tab="Game"]');
