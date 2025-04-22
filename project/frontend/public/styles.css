@@ -441,7 +441,10 @@ form button.form-action-btn:hover {
   background-color: #357ab8;
 } */
 
-
+#rejection-image {
+  width: clamp(200px, 80%, 400px);
+  height: auto;
+}
 
 /*Class Selector (.class):
 

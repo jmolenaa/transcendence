@@ -5,14 +5,14 @@ export function openSnakeTab() {
     const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/snake');
     const playersList = document.getElementById('playersList');
     // const startGameButton = document.getElementById('startGameButton');
-
+    // console.log('Visibility changed:', document.visibilityState);
     let currentPlayerId;
     let gameState = {
-        leftPlayer: [{x: 0, y: 0}],
-        rightPlayer: [{x: canvas.width - 10, y: canvas.height - 10}],
+        leftPlayer: [{ x: 0, y: 0 }],
+        rightPlayer: [{ x: canvas.width - 10, y: canvas.height - 10 }],
         apple: { x: 400, y: 300 },
         directionLeft: { x: 1, y: 0 },
-        directionRight: { x: -1, y: 0 } 
+        directionRight: { x: -1, y: 0 }
     };
 
     socket.onopen = () => {
@@ -32,25 +32,48 @@ export function openSnakeTab() {
             gameState.rightPlayer = data.rightPlayer || [];
             gameState.apple = data.apple || { x: 0, y: 0 };
         }
+        //I received game invitation and need to make a choice
         if (data.type === 'gameInvitationReceived') {
+            // document.getElementById('playerList').style.display = "none";
             const { inviterId, message } = data;
-            const accept = window.confirm(`${message} Do you accept?`);
-            console.log(`Player ${currentPlayerId} received the game invitation from player ${inviterId}`);
-
-            if (accept) {
-                // Send a message back to start the game
+            document.getElementById('invitation').style.display = "block";
+            document.getElementById('acceptInvite').addEventListener('click', () => {
+                document.getElementById('invitation').style.display = "none";
                 socket.send(JSON.stringify({
                     type: 'gameAccepted',
                     inviterId: inviterId,
                     opponentId: currentPlayerId
                 }));
-            } else {
-                // Send a message that the opponent denied the game
+            });
+            document.getElementById('declineInvite').addEventListener('click', () => {
+                document.getElementById('invitation').style.display = "none";
                 socket.send(JSON.stringify({
                     type: 'gameDenied',
+                    inviterId: inviterId,
                     opponentId: currentPlayerId
                 }));
-            }
+            });
+        }
+        if (data.type === 'gameAccepted') {
+            // Start the game
+            console.log(`Player ${currentPlayerId} accepted the game invitation from player ${data.inviterId}`);
+            // Hide waiting room and show game
+            document.getElementById('waitingRoom').style.display = 'none';
+            document.getElementById('snakeContainer').style.display = 'block';
+        }
+        if (data.type === 'gameDenied') {
+            const popup = document.getElementById('rejection');
+            const room = document.getElementById('waitingRoom');
+            // document.getElementById('playerList').style.display = "block";
+            popup.style.display = "block";
+            room.style.display = "none";
+            setTimeout(() => {
+                // Double-check they still exist in the DOM
+                if (document.contains(popup)) {
+                    popup.style.display = "none";
+                    room.style.display = "block";
+                }
+            }, 4000);
         }
     };
 
@@ -59,11 +82,7 @@ export function openSnakeTab() {
         socket.send(JSON.stringify(data));
     });
 
-    // function startGame() {
-    //     document.getElementById('waitingRoom').style.display = 'none';
-    //     document.getElementById('snakeContainer').style.display = 'block';
-    //     // Initialize the snake game here
-    // }
+    let animationFrame;
 
     function drawGame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -79,11 +98,25 @@ export function openSnakeTab() {
         // Draw apple
         ctx.fillRect(gameState.apple.x, gameState.apple.y, 10, 10);
 
-        requestAnimationFrame(drawGame);
+        animationFrame = requestAnimationFrame(drawGame);
     }
 
     drawGame();
+    document.addEventListener('visibilitychange', () => {
+        console.log('Visibility changed:', document.visibilityState);
+        if (document.visibilityState === 'hidden') {
+            socket.send(JSON.stringify({ 
+                type: 'stopGame', 
+                opponentId: opponentId,
+                inviterId: currentPlayerId
+            }));
+            if (animationFrame != null) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
 
+        } 
+    });
 
     function sendGameInvitation(opponentId) {
         console.log(`Inviting player ${opponentId} to play against you!`);
@@ -109,6 +142,35 @@ export function openSnakeTab() {
             }
         });
     }
+
+    // document.addEventListener('visibilitychange', () => {
+    //     console.log('Visibility changed:', document.visibilityState);
+    //     if (document.visibilityState === 'hidden') {
+    //         socket.send(JSON.stringify({ 
+    //             type: 'leaveGame', 
+    //             opponentId: opponentId,
+    //             inviterId: currentPlayerId
+    //         }));
+    //         if (animationFrame != null) {
+    //             cancelAnimationFrame(animationFrame);
+    //             animationFrame = null;
+    //         }
+
+    //     } 
+    // });
+
+    // socket.onclose = () => {
+    //     console.log('CLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSED!');
+    //     socket.send(JSON.stringify({
+    //         type: 'leaveGame',
+    //         opponentId: opponentId,
+    //         inviterId: currentPlayerId
+    //     }));
+    //     if (animationFrame != null) {
+    //         cancelAnimationFrame(animationFrame);
+    //         animationFrame = null;
+    //     }
+    // };
 
 }
 // }
