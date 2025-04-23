@@ -1,23 +1,94 @@
+let snakeOn = false;
+let currentPlayerId;
+let animationFrame;
+let gameState = {
+    leftPlayer: [{ x: 0, y: 0 }],
+    rightPlayer: [{ x: 790, y: 590 }],
+    apple: { x: 400, y: 300 },
+    directionLeft: { x: 1, y: 0 },
+    directionRight: { x: -1, y: 0 }
+};
+
+
 export function openSnakeTab() {
     const canvas = document.getElementById('snakeGame');
     const ctx = canvas.getContext('2d');
+    const playersList = document.getElementById('playersList');
 
     const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/snake');
-    const playersList = document.getElementById('playersList');
-    // const startGameButton = document.getElementById('startGameButton');
-    // console.log('Visibility changed:', document.visibilityState);
-    let currentPlayerId;
-    let gameState = {
-        leftPlayer: [{ x: 0, y: 0 }],
-        rightPlayer: [{ x: canvas.width - 10, y: canvas.height - 10 }],
-        apple: { x: 400, y: 300 },
-        directionLeft: { x: 1, y: 0 },
-        directionRight: { x: -1, y: 0 }
-    };
 
-    socket.onopen = () => {
-        console.log('Connected to Snake WebSocket server!');
-    };
+    setupSocketEvents(socket);
+    setupKeyboardControls(socket);
+    handleVisibilityChange(socket);
+
+    //first we receive json from backend and decide what to do with it
+    function setupSocketEvents(socket) {
+        socket.onopen = () => {
+            console.log('Connected to Snake WebSocket server!');
+        };
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            switch (data.type) {
+                case 'playerId':
+                    currentPlayerId = data.playerId; //find out your own ID
+                    break;
+                case 'waitingRoom':
+                    updatePlayersList(data.players); //its a list of available players
+                    break;
+                case 'stateUpdate':
+                    updateGameState(data);
+                    break;
+                case 'gameInvitationReceived':
+                    showInvitationPrompt(data, socket);
+                    break;
+                case 'gameAccepted':
+                    startGame();
+                    break;
+                case 'gameDenied':
+                    showRejectionNotice();
+                    break;
+            }
+        };
+    }
+    //Here I create a list of players and add buttons to play against them
+    //if user chose the opponent, I send a game invitation
+    function updatePlayersList(players) {
+        playersList.innerHTML = '';
+        players.forEach(player => {
+            if (player.id !== currentPlayerId) {
+                const listItem = document.createElement('li');
+                listItem.textContent = player.id;
+                const button = document.createElement('button');
+                button.textContent = 'Play';
+                button.onclick = () => sendGameInvitation(player.id);
+                //when you create a new item, you need to add it to DOM
+                listItem.appendChild(button);
+                playersList.appendChild(listItem);
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+    function updateGameState(data) {
+        gameState.leftPlayer = data.leftPlayer || [];
+        gameState.rightPlayer = data.rightPlayer || [];
+        gameState.apple = data.apple || { x: 0, y: 0 };
+        gameState.directionLeft = data.directionLeft || { x: 1, y: 0 };
+        gameState.directionRight = data.directionRight || { x: -1, y: 0 };        
+    }
+
+
+
+
+
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -60,6 +131,7 @@ export function openSnakeTab() {
             // Hide waiting room and show game
             document.getElementById('waitingRoom').style.display = 'none';
             document.getElementById('snakeContainer').style.display = 'block';
+            snakeOn = true;
         }
         if (data.type === 'gameDenied') {
             const popup = document.getElementById('rejection');
@@ -74,6 +146,7 @@ export function openSnakeTab() {
                     room.style.display = "block";
                 }
             }, 4000);
+            snakeOn = false;
         }
     };
 
@@ -102,6 +175,7 @@ export function openSnakeTab() {
     }
 
     drawGame();
+    if (snakeOn === true) {
     document.addEventListener('visibilitychange', () => {
         console.log('Visibility changed:', document.visibilityState);
         if (document.visibilityState === 'hidden') {
@@ -114,9 +188,10 @@ export function openSnakeTab() {
                 cancelAnimationFrame(animationFrame);
                 animationFrame = null;
             }
-
+            snakeOn = false;
         } 
     });
+}
 
     function sendGameInvitation(opponentId) {
         console.log(`Inviting player ${opponentId} to play against you!`);
@@ -128,49 +203,26 @@ export function openSnakeTab() {
         }));
     }
 
-    function updatePlayersList(players) {
-        playersList.innerHTML = '';
-        players.forEach(player => {
-            if (player.id !== currentPlayerId) {
-                const listItem = document.createElement('li');
-                listItem.textContent = player.id;
-                const button = document.createElement('button');
-                button.textContent = 'Play';
-                button.onclick = () => sendGameInvitation(player.id);
-                listItem.appendChild(button);
-                playersList.appendChild(listItem);
-            }
-        });
-    }
-
-    // document.addEventListener('visibilitychange', () => {
-    //     console.log('Visibility changed:', document.visibilityState);
-    //     if (document.visibilityState === 'hidden') {
-    //         socket.send(JSON.stringify({ 
-    //             type: 'leaveGame', 
-    //             opponentId: opponentId,
-    //             inviterId: currentPlayerId
-    //         }));
-    //         if (animationFrame != null) {
-    //             cancelAnimationFrame(animationFrame);
-    //             animationFrame = null;
-    //         }
-
-    //     } 
-    // });
-
-    // socket.onclose = () => {
-    //     console.log('CLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOSED!');
-    //     socket.send(JSON.stringify({
-    //         type: 'leaveGame',
-    //         opponentId: opponentId,
-    //         inviterId: currentPlayerId
-    //     }));
-    //     if (animationFrame != null) {
-    //         cancelAnimationFrame(animationFrame);
-    //         animationFrame = null;
-    //     }
-    // };
 
 }
-// }
+
+
+export function pauseSnakeGame() {
+    if (!snakeOn) return;
+
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({
+            type: 'stopGame',
+            opponentId,
+            inviterId: currentPlayerId
+        }));
+    }
+
+    if (animationFrame != null) {
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+    }
+
+    snakeOn = false;
+    console.log('Game paused (switched tab or visibility lost)');
+}

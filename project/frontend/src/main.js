@@ -5,12 +5,13 @@ import { openTournamentTab } from './tournament.js';
 import { setupAuth } from './auth.js';
 import { openTestTab } from './test.js';
 import { openRemoteTab } from './remote.js';
-import {openSnakeTab} from './snake.js';
+import {openSnakeTab, pauseSnakeGame} from './snake.js';
 
 
 let user = null
 let isLoggedIn = false;
-
+let snakeOn = false
+let currentTab = null;
 /**
  * Sets up tab functionality for the webpage.
  * When a tab button is clicked, it hides all tab contents and shows the corresponding content.
@@ -23,6 +24,9 @@ function setupTabs() {
     tabButtons.forEach(button => {
         button.addEventListener('click', (event) => { //run it after click
             const tabName = button.dataset.tab;
+            // if (currentTab === 'Snake' && tabName !== 'Snake') {
+            //     pauseSnakeGame();
+            // }
             //Hide all tab contents
             tabContents.forEach(tab => {
                 tab.style.display = 'none';
@@ -37,6 +41,7 @@ function setupTabs() {
             }
             //Add "active" class to the clicked button
             button.classList.add('active');
+            currentTab = tabName;
             if (tabName === 'Profile') {
                 openProfileTab();
             }
@@ -56,8 +61,7 @@ function setupTabs() {
                 openRemoteTab();
             }
             if (tabName === 'Snake') {
-                
-                openSnakeTab();
+                snakeOn = openSnakeTab();
             }
         });
     });
