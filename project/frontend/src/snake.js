@@ -15,11 +15,11 @@ export function openSnakeTab() {
     const ctx = canvas.getContext('2d');
     const playersList = document.getElementById('playersList');
 
-    const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/snake');
-
+    // const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/snake');
+	const socket = new WebSocket('ws://127.0.0.1:3000/ws/snake');
     setupSocketEvents(socket);
-    setupKeyboardControls(socket);
-    handleVisibilityChange(socket);
+    // setupKeyboardControls(socket);
+    // handleVisibilityChange(socket);
 
     //first we receive json from backend and decide what to do with it
     function setupSocketEvents(socket) {

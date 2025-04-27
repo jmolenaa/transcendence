@@ -4,7 +4,7 @@ export function openRemoteTab() {
   const ctx = canvas.getContext('2d');
 
   //socket for codeapaces__))
-  const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/game');
+//   const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/game');
   let gameState = {
     leftPaddleY: 250,
     rightPaddleY: 250,

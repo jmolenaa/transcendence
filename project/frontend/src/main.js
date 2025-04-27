@@ -9,7 +9,7 @@ import {openSnakeTab, pauseSnakeGame} from './snake.js';
 
 
 let user = null
-let isLoggedIn = false;
+
 let snakeOn = false
 let currentTab = null;
 /**
@@ -67,11 +67,28 @@ function setupTabs() {
     });
 }
 
-
+const verifyLogin = async () => {
+	const response = await fetch('/api/auth/me', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		credentials: 'include' // Include cookies in the request
+	});
+	if (response.ok) {
+		const data = await response.json();
+		user = data.user;
+		localStorage.setItem('isLoggedIn', 'true');
+		console.log('User is logged in:', user);
+	}
+	else {
+		localStorage.setItem('isLoggedIn', 'false');
+		console.log('User is not logged in');
+	}
+};
 
 window.onload = async function () {
     console.log('Page loaded');
-
     //Adding test.html
     const response = await fetch('test.html');
     const html = await response.text();
@@ -84,6 +101,7 @@ window.onload = async function () {
     const responseSnake = await fetch('snake.html');   
     const htmlSnake = await responseSnake.text();
     document.getElementById('Snake').innerHTML = htmlSnake;
+	verifyLogin();
     
     //setup default tab
     // const defaultTab = document.querySelector('.tablinks[data-tab="Game"]');

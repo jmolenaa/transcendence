@@ -9,19 +9,20 @@
             </div>
             <form class="form-layout" id="loginTest">
               <h3>Login</h3>
-              <input type="text" placeholder="Email">
-              <input type="password" placeholder="Password">
-              <button class="form-action-btn" id="flipToProfileBtnLog">Flip to Profile</button>
+              <input type="text" placeholder="Email" id="emailInput">
+              <input type="password" placeholder="Password" id="passwordInput">
+              <button class="form-action-btn" id="flipToProfileBtnLog">Log in</button>
             </form>
   
             <!-- Sign Up Form -->
             <form class="form-layout" id="signupTest" style="display: none;">
               <h3>Sign Up</h3>
-              <input type="text" placeholder="Email">
-              <input type="password" placeholder="Password">
-              <input type="text" placeholder="Username">
-              <button class="form-action-btn" id="flipToProfileBtnSign">Flip to Profile</button>
+              <input type="text" placeholder="Email" id="emailInputSign">
+              <input type="password" placeholder="Password" id="passwordInputSign">
+              <input type="text" placeholder="Username" id="usernameInputSign">
+              <button class="form-action-btn" id="flipToProfileBtnSign">Sign in</button>
             </form>
+			<div id="loginWarning" class="hidden">Error: credentials are incorrect. Try again</div>
           </div>
           <div class="card-back">
               <div class="profileGrid">

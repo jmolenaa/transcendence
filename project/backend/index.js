@@ -4,7 +4,7 @@ import fastifyStatic from '@fastify/static';
 import userRoutes from './routes/userRoutes.js';
 import  fastifyWebSocket from '@fastify/websocket';
 import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { dirname } from 'path';
 import fastifyMultipart from '@fastify/multipart';
 import dotenv from 'dotenv';
 import cookie from '@fastify/cookie';

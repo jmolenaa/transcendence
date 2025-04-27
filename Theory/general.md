@@ -45,6 +45,11 @@ npm install sqlite3 better-sqlite3 for working with a database
 npm init -y && npm install fastify@4 && npm install @fastify/static@7 && npm install sqlite3 better-sqlite3 fastify-sqlite && npm install @fastify/websocket@10 && npm install bcrypt jsonwebtoken && npm install dotenv && npm install concurrently && npm install @fastify/cookie@^7.0.0
 
 
+npm install -g eslint
+npx eslint --init
+eslint check: npx eslint . 
+<!-- If there is issue with global variables check eslint config file and change globals: globals.browser  to globals: globals.node  -->
+
 Run the server: node index.js or npx nodemon index.js or npm start
 
 **API stands for Application Programming Interface**, which is just a way for one software (e.g., your React app) to talk to another software (e.g., Fastify) using standard methods (like GET, POST). The API server takes requests from the frontend, processes them (by talking to databases, other services, or logic), and sends back responses. API: Canvas, MapTiles, Google Search, Youtube.
