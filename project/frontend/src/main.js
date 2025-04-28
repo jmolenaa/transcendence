@@ -1,12 +1,14 @@
-import { openProfileTab } from './profile.js';
-import { openGameTab } from './game.js';
-import { openChatTab } from './chat.js';
-import { openTournamentTab } from './tournament.js';
-import { setupAuth } from './auth.js';
-import { openTestTab } from './test.js';
-import { openRemoteTab } from './remote.js';
-import {openSnakeTab, pauseSnakeGame} from './snake.js';
+import { openProfileTab } from './original/profile.js';
+import { openGameTab } from './original/game.js';
+import { openChatTab } from './original/chat.js';
+import { openTournamentTab } from './original/tournament.js';
+import { setupAuth } from './original/auth.js';
+import { openTestTab } from './original/test.js';
+import { openRemoteTab } from './original/remote.js';
+import {openSnakeTab, pauseSnakeGame} from './original/snake.js';
 
+//managers
+import AuthManager from './managers/authManager.js';
 
 let user = null
 
@@ -77,36 +79,61 @@ const verifyLogin = async () => {
 	});
 	if (response.ok) {
 		const data = await response.json();
-		user = data.user;
-		localStorage.setItem('isLoggedIn', 'true');
+        AuthManager.login(data.username);
 		console.log('User is logged in:', user);
 	}
 	else {
-		localStorage.setItem('isLoggedIn', 'false');
+		AuthManager.logout();
 		console.log('User is not logged in');
 	}
 };
 
+async function loadTabHtml(tabName, fileName) {
+    const response = await fetch(fileName);
+    if (!response.ok) {
+        console.error(`Failed to load ${tabName} tab HTML: ${response.statusText}`);
+        return;
+    }
+    const html = await response.text();
+    document.getElementById(tabName).innerHTML = html;
+}
+
+async function loadAllTabs() {
+    await loadTabHtml ("Profile", "profile.js");
+    await loadTabHtml ("Practice", "practice.js");
+    await loadTabHtml ("Pong", "pong.js");
+    await loadTabHtml ("Chat", "chat.js");
+    await loadTabHtml ("Tournament", "tournament.js");
+}
+
+function hideTabsIfNeeded() {
+    if (!AuthManager.isLoggedIn) {
+
+    }
+}
+
 window.onload = async function () {
     console.log('Page loaded');
-    //Adding test.html
-    const response = await fetch('test.html');
-    const html = await response.text();
-    document.getElementById('TestGame').innerHTML = html;
-    //Adding game.html
-    const responseRemote = await fetch('remote.html');   
-    const htmlRemote = await responseRemote.text();
-    document.getElementById('Remote').innerHTML = htmlRemote;
-    //Adding snake.html
-    const responseSnake = await fetch('snake.html');   
-    const htmlSnake = await responseSnake.text();
-    document.getElementById('Snake').innerHTML = htmlSnake;
-	verifyLogin();
-    
-    //setup default tab
-    // const defaultTab = document.querySelector('.tablinks[data-tab="Game"]');
-    // defaultTab.click();
+    await loadAllTabs();
+    await verifyLogin();
     setupTabs();
+    hideTabsIfNeeded();
+    selectDefaultTab();
+
+    //Adding test.html
+    // const response = await fetch('test.html');
+    // const html = await response.text();
+    // document.getElementById('TestGame').innerHTML = html;
+    // //Adding game.html
+    // const responseRemote = await fetch('remote.html');   
+    // const htmlRemote = await responseRemote.text();
+    // document.getElementById('Remote').innerHTML = htmlRemote;
+    // //Adding snake.html
+    // const responseSnake = await fetch('snake.html');   
+    // const htmlSnake = await responseSnake.text();
+    // document.getElementById('Snake').innerHTML = htmlSnake;
+	// verifyLogin();
+    // setupTabs();
 };
 
 

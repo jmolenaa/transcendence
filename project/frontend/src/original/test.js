@@ -21,6 +21,7 @@ export async function openTestTab() {
 	
 	const isLoggedIn = localStorage.getItem('isLoggedIn'); //check!!!!!!!!!!!
 	if (isLoggedIn === 'true') {
+        console.log('GOT Item from storage! User is logged in');
 		flipCard.classList.add("flipped");
 		flipCard.style.display = "block";
 	}
