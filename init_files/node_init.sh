@@ -35,14 +35,15 @@ fi
 if [ "$NEED_NODE_INSTALL" = true ]; then
 
     if [ "$NEED_NVM_INSTALL" = true ]; then
+        echo -e $RED"No nvm detected, installing ... $END"
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     fi
     nvm install $NODE_VERSION
     nvm use $NODE_VERSION
-    echo -e "$GREEN Node has been installed\
-            Before using, please source your shell, either by turning it off and on"
+    echo -e $GREEN"\nNode has been installed\n"
+    echo -e $BLUE"Before using, please source your shell, either by restarting it or running the command: $END'[ -s \"\$HOME/.nvm/nvm.sh\" ] && \. \"\$HOME/.nvm/nvm.sh\"'$END"
+else
+    echo -e $GREEN"Correct version of Node already installed$END"
 fi
-
-echo "$GREEN Node is "

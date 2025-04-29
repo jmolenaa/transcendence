@@ -5,3 +5,11 @@ So the "type": "module"; thingie should be used to tell Node that our project is
 This makes sure thing slike import work and Node doesnt complain about them
 
 run npx depcheck to see which dependencies are unused
+
+
+ <!-- while read -r word; do
+        grep -qF "$word" package.json || echo "$word"
+    done <<< "$ALL_DEPENDENCIES" -->
+
+
+Apparently bcrypt sucks?

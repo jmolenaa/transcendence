@@ -1,0 +1,42 @@
+#Usage
+If you have a new dependency to add, add it to the corresponding list, leave an empty line at the end of the list
+List 5 is a list of dependencies that aren't required to run at the moment
+They might contain dependencies that might be necessary later or that have been used during setup
+We might delete them later
+
+1. backend_dependencies
+fastify
+@fastify/static
+@fastify/websocket
+@fastify/multipart
+@fastify/cookie
+@fastify/jwt
+@types/websocket
+fastify-websocket
+dotenv
+jsonwebtoken
+bcrypt
+better-sqlite3
+concurrently
+fastify-websocket
+typescript
+ws
+
+2. backend_dev_dependencies
+nodemon
+typedoc
+
+3. frontend_dependencies
+
+
+4. frontend_dev_dependencies
+
+
+5. currently unnecesary
+@fastify/jwt
+@types/websocket
+concurrently
+fastify-websocket
+typescript
+ws
+
