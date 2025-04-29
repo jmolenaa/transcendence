@@ -10,14 +10,16 @@ MAGENTA=\033[1;35m
 CYAN=\033[1;36m
 END=\033[0m
 
-BACKEND := ./project/backend
-FRONTEND := ./project/frontend
-
-NODE_VERSION := v23.11
+export BACKEND := ./project/backend
+export FRONTEND := ./project/frontend
+export NVM_DIR = ${HOME}/.nvm
+export PACKAGE_FILE_PATH=${PWD}/packages.txt
+export NODE_VERSION=v23.11
 
 # scripts
-NODE_INIT = ./init_files/node_init.sh
+NODE_INIT=./init_files/node_init.sh
 BACKEND_INIT = ./init_files/backend_init.sh
+STARTUP_SCRIPT = ./init_files/startup.sh
 
 RM=rm -rf
 
@@ -30,13 +32,19 @@ production:
 
 # startup server
 dev: node backend frontend
-	@cd ${BACKEND} && npx nodemon node.js
+	@${STARTUP_SCRIPT}
 
 node:
-	@export NODE_VERSION=${NODE_VERSION} && ${NODE_INIT}
+# 	echo ${NODE_VERSION}
+# 	export NODE_VERSION NODE_INIT=asd
+
+	@${NODE_INIT}
+
+# 	@export NODE_VERSION=${NODE_VERSION} && ${NODE_INIT}
 
 backend:
-	@export BACKEND=${BACKEND} && ${BACKEND_INIT}
+# 	@export BACKEND=${BACKEND} NODE_VERSION=${NODE_VERSION} && ${BACKEND_INIT}
+	@${BACKEND_INIT}
 
 frontend:
 	@echo "${YELLOW}Frontend doesn't require building yet${END}"

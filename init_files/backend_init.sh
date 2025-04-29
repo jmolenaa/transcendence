@@ -8,6 +8,8 @@ MAGENTA='\033[1;35m'
 CYAN='\033[1;36m'
 END='\033[0m'
 
+
+
 create_package_json() {
     echo -e $RED"\nNo package.json detected, initialising"$END
     echo -e "Would you like to download the package.json from the main branch of the repository? (recommended) Type 1"
@@ -16,7 +18,7 @@ create_package_json() {
     while [[ "$option" != "1" && "$option" != "2" ]]; do
         echo "Please enter a valid option, (1 or 2)"
         read option
-    done
+	done
     if [[ "$option" = "1" ]]; then
         curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/backend/package.json > package.json
         curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/backend/package-lock.json > package-lock.json
@@ -39,7 +41,15 @@ get_packages() {
     ' $PACKAGE_FILE_PATH
 }
 
-PACKAGE_FILE_PATH=$PWD/packages.txt
+CURRENT_NODE_VERSION=$(node -v | cut -d'.' -f1-2)
+if [ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]; then
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    if [ "$?" != "0" ]; then
+        echo -e $RED"Something went wrong installing and initialising nvm and the correct version of Node, please consult workflow.md or JI"$END
+        exit
+    fi
+fi
+
 cd $BACKEND
 
 if [ -f "./package.json" ]; then

@@ -8,6 +8,11 @@ MAGENTA='\033[1;35m'
 CYAN='\033[1;36m'
 END='\033[0m'
 
+
+#echo here $NODE_INIT
+#echo here $NVM_DIR
+#echo $NODE_VERSION
+#exit
 # this line is here to load nvm command into the shell if it is already installed
 # if this isn't here the script will always flag nvm as uninstalled and try to install it
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -37,13 +42,12 @@ if [ "$NEED_NODE_INSTALL" = true ]; then
     if [ "$NEED_NVM_INSTALL" = true ]; then
         echo -e $RED"No nvm detected, installing ... $END"
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
+#        export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     fi
     nvm install $NODE_VERSION
     nvm use $NODE_VERSION
-    echo -e $GREEN"\nNode has been installed\n"
-    echo -e $BLUE"Before using, please source your shell, either by restarting it or running the command: $END'[ -s \"\$HOME/.nvm/nvm.sh\" ] && \. \"\$HOME/.nvm/nvm.sh\"'$END"
+    echo -e $GREEN"\nNode has been installed\n"$END
 else
     echo -e $GREEN"Correct version of Node already installed$END"
 fi
