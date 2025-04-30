@@ -78,6 +78,7 @@ const registerHandler = async (request, reply) => {
 
 const logoutHandler = async(request, reply) => {
 //API response:
+    console.log('Logout request received');
     reply.clearCookie('token', {path: '/'});
     reply.send({ message: 'Logged out successfully' });
 }
@@ -86,7 +87,7 @@ const logoutHandler = async(request, reply) => {
 const verificationHandler = async(request, reply) => {
     const token = await request.cookies.token;
     if (!token) {
-        return handleError(reply, new Error('Not authorized'), 401);
+        return "Not authorized"; //change??
     }
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
