@@ -8,11 +8,21 @@ import bcrypt from 'bcrypt';
 //get(email) in sqlite3 is asynchronous,it returns promise, need await
 export async function checkCredentials (email){
 	const user = await db.prepare('SELECT * FROM users WHERE email = ?').get(email);
-	console.log("User found: ", user.password);
+    if (!user) {
+        return null; // Return null if no user is found
+    }
     // console.log("Type of function: ",typeof user.then); // Will be 'function' if it's a Promise and needs await
 	return user;
 }
 
+export async function checkUniqueUsername (username){
+	const user = await db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+    if (!user) {
+        return null; // Return null if no user is found
+    }
+    // console.log("Type of function: ",typeof user.then); // Will be 'function' if it's a Promise and needs await
+	return user;
+}
 //bcrypt is asynchronous, I have to use await
 export async function registerInDatabase(email, password, username) {
 	const hashedPassword = await bcrypt.hash(password, 10); 

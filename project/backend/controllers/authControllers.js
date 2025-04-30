@@ -42,24 +42,26 @@ const registerHandler = async (request, reply) => {
     if (!email || !password || !username) {
         return handleError(reply, new Error('Email, username and password are required'), 400);
     }
-
+    const user = await authServices.checkCredentials(email);
+    const existUsername = await authServices.checkUniqueUsername(username);
+    if (user || existUsername) {
+        return handleError(reply, new Error('Username or email is already in use'), 500);
+    }
     try {
-        // const hashedPassword = await bcrypt.hash(password, 10);
         const registerUser = authServices.registerInDatabase(email, password, username);
 
         if (!registerUser) {
             return handleError(reply, new Error('Registration failed'), 500);
         }
-        // DO I NEED TOKEN HERE????????????????????
-        // const token = fastify.jwt.sign({ email, username }, JWT_SECRET, { expiresIn: '1h' });
-        // // Set the JWT in an HTTP-only cookie
-        // reply.setCookie('token', token, {
-        // 	httpOnly: true,  // Ensures it's not accessible via JavaScript
-        // 	secure: true,
-        // 	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
-        // 	path: '/',  // Cookie is available on all routes
-        // 	expires: 7 * 24 * 60 * 60, // 7 days
-        // });
+        const token = jwt.sign({ email}, JWT_SECRET, { expiresIn: '1h' });
+        // Set the JWT in an HTTP-only cookie
+        reply.setCookie('token', token, {
+        	httpOnly: true,  // Ensures it's not accessible via JavaScript
+        	secure: true,
+        	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
+        	path: '/',  // Cookie is available on all routes
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+        });
         return reply.status(201).send({ message: 'Registration successful' });
     } catch (err) {
         console.error('Registration error:', err);
