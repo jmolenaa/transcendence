@@ -6,8 +6,8 @@ import snake from '../plugins/websocketSnake.js';
 
 
 export default async function userRoutes(fastify) {
-    fastify.get('/api/users', userControllers.getAllUsersHandler);
-    fastify.delete('/api/users', userControllers.deleteUserHandler);
+    fastify.get('/api/users', { preHandler: authControllers.authenticate }, userControllers.getAllUsersHandler);
+    fastify.delete('/api/users', { preHandler: authControllers.authenticate }, userControllers.deleteUserHandler);
     fastify.post('/api/users', userControllers.createUserHandler);
     fastify.post('/api/players', userControllers.addingPlayersHandler);
     fastify.post('/api/winner', userControllers.saveWinnerHandler);
@@ -36,7 +36,7 @@ export default async function userRoutes(fastify) {
     // fastify.post('/api/remote/winner', userControllers.remoteWinnerHandler); 
     
     //Profile only for logged in
-    fastify.get('/api/profile', userControllers.profileHandler);
+    fastify.get('/api/profile', { preHandler: authControllers.authenticate }, userControllers.profileHandler);
 
     //DEBUGGING
     fastify.ready().then(() => {
