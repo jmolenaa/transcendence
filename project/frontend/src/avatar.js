@@ -6,7 +6,7 @@
  *  The function uses the Fetch API to send the image data to the server.
  *  The server should handle the image upload and return a success response.
  */
-export function openProfileTab(event){
+export function uploadAvatar(){
 
     const defaultAvatar = document.getElementById("defaultAvatar");
     const fileInput = document.getElementById("fileInput");

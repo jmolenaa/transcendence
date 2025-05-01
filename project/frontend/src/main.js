@@ -1,6 +1,5 @@
 
 
-// import { openProfileTab } from './profile.js';
 import { openPracticeTab } from './practice.js';
 // import { openChatTab } from './chat.js';
 // import { openTournamentTab } from './tournament.js';

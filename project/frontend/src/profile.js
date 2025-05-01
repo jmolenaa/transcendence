@@ -1,9 +1,16 @@
 import { setupTabs } from "./main.js";
+import {uploadAvatar } from "./avatar.js"
 import AuthManager from "./managers/authManager.js";
 
 let email = {};
 let password = {};
 let username = {};
+
+
+function openProfileCard() {
+	uploadAvatar();
+	console.log ("Ïn profile");
+}
 
 export async function openProfileTab() {
 	const signup = document.getElementById("signupTest");
@@ -29,6 +36,7 @@ export async function openProfileTab() {
 		console.log('User is logged in profile.js');
 		flipCard.classList.add("flipped");
 		flipCard.style.display = "block";
+		openProfileCard();
 	}
 
 	//This is for choosing between login and signup
@@ -67,9 +75,11 @@ export async function openProfileTab() {
 					return;
 				}
 				const data = await response.json();
+				console.log ("I FLIP HERE")
 				flipCard.classList.add("flipped");
 				AuthManager.login(data.username);
 				setupTabs();
+				openProfileCard();
 			} catch (error) {
 				console.error('Error:', error);
 			}
@@ -100,15 +110,12 @@ export async function openProfileTab() {
 				flipCard.classList.add("flipped");
 				AuthManager.login(data.username);
 				setupTabs();
+				openProfileCard();
 			} catch (error) {
 				console.error('Error:', error);
 			}
 		});
 	}
-	// if (flipCard) {
-	//     flipCard.style.display = "block";
-	// }
-
 
 	//LOGOUT
 	if (logoutBtn) {

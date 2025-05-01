@@ -27,7 +27,11 @@ console.log("Dirname name in index.js:", __dirname); // Debugging
 
 
 const fastify = Fastify({ logger: true });
-fastify.register(fastifyMultipart);
+fastify.register(fastifyMultipart, {
+  limits: {
+    fileSize: 1 * 1024 * 1024 // optional: max file size (10MB here)
+  }
+});
 fastify.register(fastifyWebSocket);
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../frontend/public'),

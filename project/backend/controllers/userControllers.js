@@ -4,6 +4,14 @@ import fs from 'fs';
 import pump from 'pump';
 import jwt from 'jsonwebtoken';
 const JWT_SECRET = "" + process.env.JWT_SECRET; //using environmental variable for JWT secret
+import { fileURLToPath } from 'url';
+
+
+//Why do I need it????????????
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log("File name in controllers.js:", __filename); // Debugging
+console.log("Dirname name in controllers.js:", __dirname); // Debugging
 
 // import {handleError} from '../utils/utils.js';
 
@@ -76,12 +84,17 @@ const profileHandler = (request, reply) => {
 }
 
 const uploadAvatarHandler = async(request, reply) => {
-    const data = await request.file;
-    const filename = `avatar_${Date.now()}_${data.filename}`;
-    console.log("File name:", filename); // Debugging
-    const filepath = path.join(__dirname, 'uploads', filename);
-    await pump(data.file, fs.createWriteStream(filepath));
-    const avatarUrl = `/uploads/${filename}`;
+    try {
+        const data = await request.file();
+        const filename = `avatar_${Date.now()}_${data.filename}`;
+        console.log("File name:", filename); // Debugging
+        const filepath = path.join(__dirname,'..', 'uploads', filename);
+        await pump(data.file, fs.createWriteStream(filepath));
+        const avatarUrl = `/uploads/${filename}`;
+	} catch (error) {
+		console.error('Upload error:', error);
+		return reply.code(500).send({ success: false, error: 'Upload failed' });
+	}
 
 	//if you have some cleanup, logging, or additional logic after reply.send(), 
 	// and you don't await it — those lines might execute before the response is properly sent. 

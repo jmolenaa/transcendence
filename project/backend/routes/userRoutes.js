@@ -36,7 +36,7 @@ export default async function userRoutes(fastify) {
     // fastify.post('/api/remote/winner', userControllers.remoteWinnerHandler); 
     
     //Profile only for logged in
-    fastify.get('/api/profile', { preHandler: authControllers.authenticate }, userControllers.profileHandler);
+    // fastify.get('/api/profile', { preHandler: authControllers.authenticate }, userControllers.profileHandler);
 
     //DEBUGGING
     fastify.ready().then(() => {
