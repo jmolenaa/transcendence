@@ -1,39 +1,66 @@
-
-
-
-//1. Use Classes for Game Objects!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-// Benefits of Class-Based Design
-// 🔁 Reusability (e.g., different modes: AI, 2-player)
-
-// 🔧 Extensibility (easy to add sound, difficulty, pause)
-
-// 🚫 No global state pollution
-
-// 👀 Easier debugging and testing
-
-// 4. Optional Enhancements
-// Add AI logic for right paddle.
-
-// Add sound effects and countdown to start.
-
-// Use canvas scaling for responsiveness.
-
-// Add a UI layer for game states (start screen, game over).
-
-// Persist scores or names with localStorage.
-
-
-
-
-
+var canvas = document.getElementById('pong');
+var context = canvas.getContext('2d');
 
 let animationId = null;
-let player1Name = "Player1";
-let player2Name = "Player2";
+let names1 = ["NullPointerPrince","404NotFoundYou","StackOverflowed",
+	"CtrlAltElite","CommitCrimes","RubberDuckieDev","PingMePlz","BrbCompiling","FatalSyntax",
+	"BuggedButHappy","InfiniteLoopHole","SegFaultyLogic","ByteMeMaybe","SpaghettiCoder",
+	"FullSnackDev","KernelSandwich","BoolinDev","NaNStopper","DevNullius",
+	"TabbyTheDebugger","LootBoxLad","NoScopeCSharp","Lagzilla","RespawnResume", "CacheMeOutside"];
+let names2 = ["AimBotany","CrashTestCutie","YeetCompiler",
+	"PixelPuncher","AFKChef","TeaBagger3000","CaffeineLoop","RAMenNoodles",
+	"404SnaccNotFound","HelloWorldDomination","JavaTheHutt",
+	"WiFried","DebuggerDuck","ExceptionHunter","TheRealSlimShader",
+	"SyntaxTerror","ClickyMcClickface","BananaForScale","Devzilla",
+	"MrRobotoCallsHome","SudoNym","OopsIDidItAgain","MemeDrivenDev",
+	"TypoNinja","BitFlipper"];
+const randomIndex = Math.floor(Math.random() * names1.length);
+let player1Name = names1[randomIndex];
+let player2Name = names2[randomIndex];
+let leftPlayerScore = 0;
+let rightPlayerScore = 0;
 
-// Called when the Game tab is opened
+class Ball {
+	constructor() {
+		this.x = canvas.width / 2;
+		this.y = canvas.height / 2;
+		this.speedX = 1;
+		this.speedY = 1;
+		this.size = 10;
+	}
+	update() {
+		this.x += this.speedX;
+		this.y += this.speedY;
+	}
+	drawBall() {
+		context.fillStyle = 'red';
+		context.fillRect(this.x, this.y, this.size, this.size);
+	}
+	reset() {
+		this.x = canvas.width / 2;
+		this.y = canvas.height / 2;
+		this.speedX = -this.speedX;
+	}
+}
+
+class Paddle {
+	constructor(x) {
+		this.height = 100;
+		this.width = 10;
+		this.x = x;
+		this.y = (canvas.height - this.height) / 2;
+		this.paddleSpeed = 10;
+	}
+	drawPaddle() {
+		context.fillStyle = 'white';
+		context.fillRect(this.x, this.y, this.width, this.height);
+	}
+}
+
+let ball = new Ball();
+let leftPaddle = new Paddle(0);
+let rightPaddle = new Paddle(canvas.width - 10);
+
 export function openPracticeTab() {
 	const buttonStart = document.getElementById("startGame");
 	const buttonStop = document.getElementById("stopGame");
@@ -50,105 +77,64 @@ export function openPracticeTab() {
 	});
 }
 
-// Get the canvas and its context
-var canvas = document.getElementById('pong');
-var context = canvas.getContext('2d');
-// Constants for the game
-var WIDTH = canvas.width;
-var HEIGHT = canvas.height;
-var PADDLE_WIDTH = 10;
-var PADDLE_HEIGHT = 100;
-var BALL_SIZE = 10;
-// Set initial positions for paddles and ball
-var leftPaddleY = (HEIGHT - PADDLE_HEIGHT) / 2;
-var rightPaddleY = (HEIGHT - PADDLE_HEIGHT) / 2;
-var ballX = WIDTH / 2;
-var ballY = HEIGHT / 2;
-var ballSpeedX = 2;
-var ballSpeedY = 2;
-var leftPlayerScore = 0;
-var rightPlayerScore = 0;
-// var player1Name = "";
-// var player2Name = "";
-// Draw the paddles and the ball
-function draw() {
-	context.clearRect(0, 0, WIDTH, HEIGHT); // Clear the canvas
-	// Draw paddles
-	context.fillStyle = 'white';
-	context.fillRect(0, leftPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT); // Left paddle
-	context.fillRect(WIDTH - PADDLE_WIDTH, rightPaddleY, PADDLE_WIDTH, PADDLE_HEIGHT); // Right paddle
-	// Draw the ball
-	context.fillRect(ballX, ballY, BALL_SIZE, BALL_SIZE); // Ball
-}
-// Update the ball's position
-function updateBall() {
-	ballX += ballSpeedX;
-	ballY += ballSpeedY;
-	// Collision with top/bottom walls
-	if (ballY <= 0 || ballY + BALL_SIZE >= HEIGHT) {
-		ballSpeedY = -ballSpeedY; // Bounce
+function checkBall() {
+	// Top/bottom wall collision
+	if (ball.y <= 0 || ball.y + ball.size >= canvas.height) {
+		ball.speedY = -ball.speedY;
 	}
-	// Collision with paddles
-	if ((ballX <= PADDLE_WIDTH && ballY + BALL_SIZE > leftPaddleY && ballY < leftPaddleY + PADDLE_HEIGHT) ||
-		(ballX + BALL_SIZE >= WIDTH - PADDLE_WIDTH && ballY + BALL_SIZE > rightPaddleY && ballY < rightPaddleY + PADDLE_HEIGHT)) {
-		ballSpeedX = -ballSpeedX; // Bounce
+	// Left paddle collision
+	if (ball.x <= leftPaddle.x + leftPaddle.width &&
+		ball.y + ball.size >= leftPaddle.y && ball.y <= leftPaddle.y + leftPaddle.height) {
+		ball.speedX = -ball.speedX;
 	}
-	// Ball goes out of bounds (left or right)
-	if (ballX <= 0) {
+	// Right paddle collision
+	if (ball.x <= rightPaddle.x + rightPaddle.width &&
+		ball.x + ball.size >= rightPaddle.x && ball.y <= rightPaddle.y + rightPaddle.height) {
+		ball.speedX = -ball.speedX;
+	}
+	if (ball.x <= 0) {
 		rightPlayerScore++;
-
-		ballX = WIDTH / 2;
-		ballY = HEIGHT / 2;
-		ballSpeedX = -ballSpeedX; // Change ball direction
+		ball.reset();
 	}
-	if (ballX + BALL_SIZE >= WIDTH) {
+	if (ball.x + ball.size >= canvas.width) {
 		leftPlayerScore++;
-
-		ballX = WIDTH / 2;
-		ballY = HEIGHT / 2;
-		ballSpeedX = -ballSpeedX; // Change ball direction
+		ball.reset();
 	}
 }
 
 function updateGameStatus() {
-	var gameStatusDiv = document.getElementById('gameStatus');
-	console.log("Name   " ,player1Name )
-	gameStatusDiv.innerHTML = `${player1Name} ${leftPlayerScore} - ${rightPlayerScore} ${player2Name}`;
+	const gameStatusDiv = document.getElementById('gameStatus');
+	gameStatusDiv.innerHTML = `${player1Name}   ${leftPlayerScore} - ${rightPlayerScore}   ${player2Name}`;
 }
-// Control paddles with keyboard (W/S for left paddle, Arrow keys for right paddle)
+
 function movePaddles(event) {
-	var paddleSpeed = 10;
-	if (event.key === 'w' && leftPaddleY > 0)
-		leftPaddleY -= paddleSpeed;
-	if (event.key === 's' && leftPaddleY + PADDLE_HEIGHT < HEIGHT)
-		leftPaddleY += paddleSpeed;
-	if (event.key === 'ArrowUp' && rightPaddleY > 0)
-		rightPaddleY -= paddleSpeed;
-	if (event.key === 'ArrowDown' && rightPaddleY + PADDLE_HEIGHT < HEIGHT)
-		rightPaddleY += paddleSpeed;
+	if (event.key === 'w' && leftPaddle.y > 0)
+		leftPaddle.y -= leftPaddle.paddleSpeed;
+	if (event.key === 's' && leftPaddle.y + leftPaddle.height < canvas.height)
+		leftPaddle.y += leftPaddle.paddleSpeed;
+	if (event.key === 'ArrowUp' && rightPaddle.y > 0)
+		rightPaddle.y -= rightPaddle.paddleSpeed;
+	if (event.key === 'ArrowDown' && rightPaddle.y + rightPaddle.height < canvas.height)
+		rightPaddle.y += rightPaddle.paddleSpeed;
 }
-// Listen for keyboard input
+
 document.addEventListener('keydown', movePaddles);
-// Main game loop
+
 function gameLoop() {
-	draw();
-	updateBall();
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	ball.update();
+	checkBall();
+	ball.drawBall();
+	leftPaddle.drawPaddle();
+	rightPaddle.drawPaddle();
 	updateGameStatus();
-	if (leftPlayerScore >= 3 || rightPlayerScore >= 3) {
-		return ;
+	if (leftPlayerScore >= 3 || rightPlayerScore >= 3) { //add winner here
+		cancelAnimationFrame(animationId);
+		return;
 	}
-	// 	fetch('api/winner', { // Correct route for saving game results
-	// 		method: 'POST',
-	// 		headers: { 'Content-Type': 'application/json' },
-	// 		body: JSON.stringify({ player1: player1Name, player2: player2Name, winner: leftPlayerScore >= 3 ? player1Name : player2Name })
-	// 	})
-	// 	// Game over condition, stop the game loop
-	// 	console.log('Game Over!'); // Placeholder for game over logic
-	// 	return;
-	// }
-	animationId = requestAnimationFrame(gameLoop); // Request next frame
+	animationId = requestAnimationFrame(gameLoop);
 }
-// Start the game
+
 function handleStartGame() {
 	gameLoop();
 }
@@ -156,13 +142,12 @@ function handleStartGame() {
 function handleStopGame() {
 	console.log('Stopping game');
 	if (animationId) {
-		cancelAnimationFrame(animationId); // Stop the animation frame
+		cancelAnimationFrame(animationId);
 	}
+	if (ball)
+		ball.reset();
 	leftPlayerScore = 0;
 	rightPlayerScore = 0;
 	updateGameStatus();
-	const canvas = document.getElementById("pong");
-	const ctx = canvas.getContext("2d");
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	return ;
+	context.clearRect(0, 0, canvas.width, canvas.height);
 }

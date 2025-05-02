@@ -89,7 +89,7 @@ const uploadAvatarHandler = async(request, reply) => {
         const filename = `avatar_${Date.now()}_${data.filename}`;
         console.log("File name:", filename); // Debugging
         const filepath = path.join(__dirname,'..', 'uploads', filename);
-        await pump(data.file, fs.createWriteStream(filepath));
+        pump(data.file, fs.createWriteStream(filepath));
         const avatarUrl = `/uploads/${filename}`;
 	} catch (error) {
 		console.error('Upload error:', error);
