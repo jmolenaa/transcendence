@@ -12,7 +12,7 @@ CURRENT_NODE_VERSION=$(node -v | cut -d'.' -f1-2)
 if [ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]; then
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     if [ "$?" != "0" ]; then
-        echo -e "$REDSomething went wrong installing and initialising nvm and the correct version of Node, please consult workflow.md or JI$END"
+        echo -e $RED"Something went wrong installing and initialising nvm and the correct version of Node, please consult workflow.md or JI"$END
         exit 1
     fi
     echo -e $BLUE"Currently your shell still doesn't see the correct version of node"
@@ -22,4 +22,4 @@ if [ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]; then
     echo -e $BLUE"Pretty please and have a purrfect day ₍^. .^₎⟆"$END
 fi
 
-cd ${BACKEND} && npx nodemon node.js
+cd ${BACKEND} && npm start
