@@ -35,7 +35,6 @@ typedoc
 5. currently unnecesary
 @fastify/jwt
 @types/websocket
-concurrently
 fastify-websocket
 typescript
 ws

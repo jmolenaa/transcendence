@@ -18,16 +18,24 @@ create_package_json() {
     while [[ "$option" != "1" && "$option" != "2" ]]; do
         echo "Please enter a valid option, (1 or 2)"
         read option
-	done
+    done
     if [[ "$option" = "1" ]]; then
         curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/backend/package.json > package.json
         curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/backend/package-lock.json > package-lock.json
-    else
+    else    
         npm init -y
         awk '{
         print
         if ($0 ~ /"main"\s*:/ && !found) {
             print "  \"type\": \"module\","
+            found = 1
+        }
+        }' package.json > tmp.json && mv tmp.json package.json
+        awk '{
+        print
+        if ($0 ~ /"scripts"\s*:/ && !found) {
+            print "    \"start\": \"concurrently \\\"nodemon index.js\\\" \\\"python3 liveDatabase.py\\\"\","
+
             found = 1
         }
         }' package.json > tmp.json && mv tmp.json package.json
@@ -77,6 +85,7 @@ if [ "$NEED_INSTALL_MODULES" = true ]; then
         echo -e $GREEN"\nBackend initialised (hopefully succesfully)"$END
     else
         npm install
+        echo -e $GREEN"\nBackend initialised (hopefully succesfully)"$END
     fi
     
 fi

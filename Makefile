@@ -23,27 +23,21 @@ STARTUP_SCRIPT = ./init_files/startup.sh
 
 RM=rm -rf
 
-# build stuff here
 all: dev
-
 
 production:
 	@echo "${RED}No production flow yet :(${END}"
 
-# startup server
+# starts in dev mode, will start server with nodemon, so it monitors changes to files and restarts automatically
 dev: node backend frontend
 	@${STARTUP_SCRIPT}
 
+# calls script that makes sure the right version of node is being used
 node:
-# 	echo ${NODE_VERSION}
-# 	export NODE_VERSION NODE_INIT=asd
-
 	@${NODE_INIT}
 
-# 	@export NODE_VERSION=${NODE_VERSION} && ${NODE_INIT}
-
+# initialises package.json and installs modules if they aren't already there
 backend:
-# 	@export BACKEND=${BACKEND} NODE_VERSION=${NODE_VERSION} && ${BACKEND_INIT}
 	@${BACKEND_INIT}
 
 frontend:
@@ -53,14 +47,13 @@ frontend:
 clean:
 	@${RM} ${BACKEND}/node_modules
 
-# cleanup package.json as well, be careful with this one, also cleanup .nvm or node?
+# cleanup package.json as well
 reset: clean
 	@${RM} ~/.nvm
 	@${RM} ${BACKEND}/package.json
 	@${RM} ${BACKEND}/package-lock.json
 
-re: clean init
+re: clean dev
 
-
-.PHONY: all init clean re fclean
+.PHONY: all dev clean re reset backend frontend node production
 

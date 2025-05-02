@@ -31,7 +31,8 @@ const loginHandler = async(request, reply) => {
         path: '/',  // Cookie is available on all routes
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
     });
-    return reply.status(201).send({ message: 'Registration successful' });
+	console.log("its ok in login handler, send 201. Token in loginHandler:", token); // Debugging
+    return reply.status(200).send({ message: 'Registration successful' });
 }
 
 const registerHandler = async (request, reply) => {
@@ -41,24 +42,26 @@ const registerHandler = async (request, reply) => {
     if (!email || !password || !username) {
         return handleError(reply, new Error('Email, username and password are required'), 400);
     }
-
+    const user = await authServices.checkCredentials(email);
+    const existUsername = await authServices.checkUniqueUsername(username);
+    if (user || existUsername) {
+        return handleError(reply, new Error('Username or email is already in use'), 500);
+    }
     try {
-        // const hashedPassword = await bcrypt.hash(password, 10);
         const registerUser = authServices.registerInDatabase(email, password, username);
 
         if (!registerUser) {
             return handleError(reply, new Error('Registration failed'), 500);
         }
-        // DO I NEED TOKEN HERE????????????????????
-        // const token = fastify.jwt.sign({ email, username }, JWT_SECRET, { expiresIn: '1h' });
-        // // Set the JWT in an HTTP-only cookie
-        // reply.setCookie('token', token, {
-        // 	httpOnly: true,  // Ensures it's not accessible via JavaScript
-        // 	secure: true,
-        // 	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
-        // 	path: '/',  // Cookie is available on all routes
-        // 	expires: 7 * 24 * 60 * 60, // 7 days
-        // });
+        const token = jwt.sign({ email}, JWT_SECRET, { expiresIn: '1h' });
+        // Set the JWT in an HTTP-only cookie
+        reply.setCookie('token', token, {
+        	httpOnly: true,  // Ensures it's not accessible via JavaScript
+        	secure: true,
+        	sameSite: 'Strict',  // Prevents cross-site request forgery attacks
+        	path: '/',  // Cookie is available on all routes
+            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+        });
         return reply.status(201).send({ message: 'Registration successful' });
     } catch (err) {
         console.error('Registration error:', err);
@@ -66,17 +69,18 @@ const registerHandler = async (request, reply) => {
     }
 };
 
-const googleHandler = async(request, reply) => {
-    //https://github.com/googleapis/google-api-nodejs-client
-    //https://developers.google.com/identity/protocols/oauth2
-    // GOOGLE auth implementation:
-    // https://dev.to/fozooni/google-oauth2-with-fastify-typescript-from-scratch-1a57
-    //Theory?
-};
+// const googleHandler = async(request, reply) => {
+//     //https://github.com/googleapis/google-api-nodejs-client
+//     //https://developers.google.com/identity/protocols/oauth2
+//     // GOOGLE auth implementation:
+//     // https://dev.to/fozooni/google-oauth2-with-fastify-typescript-from-scratch-1a57
+//     //Theory?
+// };
 
 
 const logoutHandler = async(request, reply) => {
 //API response:
+    console.log('Logout request received');
     reply.clearCookie('token', {path: '/'});
     reply.send({ message: 'Logged out successfully' });
 }
@@ -85,15 +89,14 @@ const logoutHandler = async(request, reply) => {
 const verificationHandler = async(request, reply) => {
     const token = await request.cookies.token;
     if (!token) {
-        return handleError(reply, new Error('Not authorized'), 401);
+        return "Not authorized"; //change??
     }
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         reply.send({ user: decoded });
     } catch (err) {
-        return handleError(reply, new Error('Not authorized'), 401);
+        return handleError(reply, err, 401);
     }
-
 }
 
 export default {

@@ -18,13 +18,13 @@
   </div>
   <!-- TABS -->
   <div class="tab">
-    <button class="tablinks" data-tab="Game">Game</button>
-    <button class="tablinks" data-tab="Chat">Chat</button>
-    <button class="tablinks" data-tab="Tournament">Tournament</button>
+    <button class="tablinks" data-tab="Profile">Profile</button>
+    <button class="tablinks" data-tab="Practice">Practice pong</button>
+    <!-- <button class="tablinks" data-tab="Chat">Chat</button>
+    <button class="tablinks" data-tab="Tournament">Tournament empty</button>
+    <button class="tablinks" data-tab="Remote">Remote game- test for the game on backend</button>
+    <button class="tablinks" data-tab="Snake">Snake</button> -->
     <!-- <button class="tablinks" data-tab="Profile">Profile</button> -->
-    <button class="tablinks" data-tab="TestGame">TestGame</button>
-    <button class="tablinks" data-tab="Remote">Remote</button>
-    <button class="tablinks" data-tab="Snake">Snake</button>
     <!-- <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
     <button class="tablinks" onclick="openTab(event, 'Chat')">Chat</button>
     <button class="tablinks" onclick="openTab(event, 'Tournament')">Tournament</button>
@@ -32,9 +32,7 @@
     <!-- ADD/HIDE  style="display: none;" TO HIDE PROFILE PAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
   </div>
 
-  <div id="Game" class="tabcontent">
-    <input type="text" id="player1" placeholder="Player 1">
-    <input type="text" id="player2" placeholder="Player 2">
+  <div id="Practice" class="tabcontent">
     <button id="startGame">Start Game</button>
     <div id="gameContainer">
       <div id="gameStatus">0 - 0</div>
@@ -50,7 +48,7 @@
   <div id="Tournament" class="tabcontent">
     <h3>Tournament</h3>
   </div>
-  <div id="Login" class="tabcontent">
+  <!-- <div id="Profile" class="tabcontent">
     <h3>Login</h3>
     <form id=loginForm>
       <input type="text" id="email" placeholder="Email" required autocomplete="current-username">
@@ -68,7 +66,7 @@
       <button type="submit">Register</button>
     </form>
     <div id="registerError" class="hidden">Invalid email or password</div>
-  </div>
+  </div> -->
   <!-- <div id="Profile" class="tabcontent">
     <div class="profileGrid">
       <div class="profilePhoto">
@@ -84,11 +82,11 @@
       <div class="statistics"><br>Statistics, Tournament info, match history</div>
     </div>
   </div> -->
-  <div id="TestGame" class="tabcontent"></div>
-  <div id="Remote" class="tabcontent"></div>
-  <div id="Snake" class="tabcontent"></div>
+  <div id="Profile" class="tabcontent"></div>
+  <!-- <div id="Remote" class="tabcontent"></div>
+  <div id="Snake" class="tabcontent"></div> -->
   <!-- Main Script -->
-  <script type="module" src="./src/main.js">
+  <script type="module" src="../src/main.js">
   </script>
 </body>
 
