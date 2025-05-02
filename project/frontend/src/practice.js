@@ -143,7 +143,10 @@ function handleStopGame() {
 	console.log('Stopping game');
 	if (animationId) {
 		cancelAnimationFrame(animationId);
+		animationId = null; //do i need it?
+		document.removeEventListener('keydown', movePaddles); //????????????
 	}
+
 	if (ball)
 		ball.reset();
 	leftPlayerScore = 0;
