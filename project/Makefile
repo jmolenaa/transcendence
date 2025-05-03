@@ -10,8 +10,8 @@ MAGENTA=\033[1;35m
 CYAN=\033[1;36m
 END=\033[0m
 
-export BACKEND := ./project/backend
-export FRONTEND := ./project/frontend
+export BACKEND := ./backend
+export FRONTEND := ./frontend
 export NVM_DIR = ${HOME}/.nvm
 export PACKAGE_FILE_PATH=${PWD}/packages.txt
 export NODE_VERSION=v23.11
