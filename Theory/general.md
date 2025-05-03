@@ -44,6 +44,18 @@ npm install sqlite3 better-sqlite3 for working with a database
 
 npm init -y && npm install fastify@4 && npm install @fastify/static@7 && npm install sqlite3 better-sqlite3 fastify-sqlite && npm install @fastify/websocket@10 && npm install bcrypt jsonwebtoken && npm install dotenv && npm install concurrently && npm install @fastify/cookie@^7.0.0
 
+If you get : code: 'ERR_DLOPEN_FAILED'
+npm rebuild better-sqlite3
+npm rebuild bcrypt
+
+
+
+ 
+
+npm install -g eslint
+npx eslint --init
+eslint check: npx eslint . 
+<!-- If there is issue with global variables check eslint config file and change globals: globals.browser  to globals: globals.node  -->
 
 Run the server: node index.js or npx nodemon index.js or npm start
 

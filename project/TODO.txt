@@ -4,3 +4,5 @@ Delete .env
 Is @fastify/oauth2 allowed?
 Add email format for field email (closer to finish)
 Check avatar path in backend databade schema
+
+what happens if i register, logout, login
