@@ -17,6 +17,3 @@
 (17, '12121212121212', '12121212121', '$2b$10$mJ9A1JS6TPxO/FCGz4c48eS3DTcDKBqyzRCA8hxrOj2p45i.jUuGq', 'default_avatar.jpg', None, '2025-04-30 19:31:00')
 (18, '44', '44', '$2b$10$O9y.ky6f9JARA7bKldbEy.7qEdW.1kn/HudS7XLb9/Uctb8yFm1v2', 'default_avatar.jpg', None, '2025-04-30 19:34:52')
 (19, '23232323', '23232323', '$2b$10$lt50jtgv0QaM/.0AqzPF.eUHOrxJyL67r5SQ3qP8qd4YS5fzXnx9m', 'default_avatar.jpg', None, '2025-04-30 19:36:06')
-(20, '11', '11', '$2b$10$iZ92.741L239HJ0BbLDIo.sdO/4Wd9jmIhPK5py.vo7Uc3628XhVC', 'default_avatar.jpg', None, '2025-05-01 10:06:51')
-(21, '2', '2', '$2b$10$safsB7lALXdG.CvbQzmRMuZlxYvBJxypDC5Km6EZS5hn8Okom79U2', 'default_avatar.jpg', None, '2025-05-01 10:08:38')
-(22, '1212121212121212121212', '1212121212121212121', '$2b$10$mOk1QDHaW7su2JXn1K1f8OWDKfENh9rFZPPE8CIeMNzw2BD0LuZk6', 'default_avatar.jpg', None, '2025-05-01 12:10:19')
