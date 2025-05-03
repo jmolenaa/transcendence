@@ -32,7 +32,11 @@ const loginHandler = async(request, reply) => {
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
     });
 	console.log("its ok in login handler, send 201. Token in loginHandler:", token); // Debugging
-    return reply.status(200).send({ message: 'Registration successful' });
+    console.log("BAckend user: ", user.username);
+	return reply.status(200).send({ 
+		message: 'Registration successful',
+		username: user.username
+	 });
 }
 
 const registerHandler = async (request, reply) => {
@@ -86,10 +90,24 @@ const logoutHandler = async(request, reply) => {
 }
 
 
+const authenticate = async(request, reply) => {
+    const token = await request.cookies.token;
+    if (!token) {
+        return res.status(401).send({ error: 'Unauthorized: No token' });
+    }
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+		request.user = payload; //attach info to request, so when i continue with routes i can access user email : request.user.email (I had this info passed when created the token)
+		next(); //Continue to the route
+    } catch (err) {
+        return handleError(reply, err, 401);
+    }
+}
+
 const verificationHandler = async(request, reply) => {
     const token = await request.cookies.token;
     if (!token) {
-        return "Not authorized"; //change??
+        return res.status(401).send({ error: 'Unauthorized: No token' });
     }
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
@@ -104,6 +122,7 @@ export default {
 	registerHandler,
 	logoutHandler,
 	verificationHandler,
+	authenticate
 
 };
 

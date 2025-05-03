@@ -14,6 +14,22 @@ export function openSnakeTab() {
     const canvas = document.getElementById('snakeGame');
     const ctx = canvas.getContext('2d');
     const playersList = document.getElementById('playersList');
+<<<<<<< HEAD:project/frontend/src/snake.js
+
+    const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/snake');
+
+    setupSocketEvents(socket);
+    setupKeyboardControls(socket);
+    handleVisibilityChange(socket);
+
+    //first we receive json from backend and decide what to do with it
+    function setupSocketEvents(socket) {
+        socket.onopen = () => {
+            console.log('Connected to Snake WebSocket server!');
+        };
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+=======
 
     // const socket = new WebSocket('wss://congenial-system-x76557wwgx93px46-3000.app.github.dev/ws/snake');
 	const socket = new WebSocket('ws://127.0.0.1:3000/ws/snake');
@@ -149,6 +165,7 @@ export function openSnakeTab() {
             snakeOn = false;
         }
     };
+>>>>>>> windows:project/frontend/src/old/snake.js
 
             switch (data.type) {
                 case 'playerId':
@@ -267,6 +284,15 @@ export function openSnakeTab() {
         animationFrame = requestAnimationFrame(drawGame);
     }
 
+<<<<<<< HEAD:project/frontend/src/snake.js
+    //sends key pressed to the backend//here i react on pressed buttons
+    function setupKeyboardControls(socket) {
+        document.addEventListener('keydown', (event) => {
+            socket.send(JSON.stringify({
+                type: 'move', 
+                key: event.key }));
+        });
+=======
     drawGame();
     if (snakeOn === true) {
     document.addEventListener('visibilitychange', () => {
@@ -294,6 +320,7 @@ export function openSnakeTab() {
             opponentId: opponentId,
             inviterId: currentPlayerId
         }));
+>>>>>>> windows:project/frontend/src/old/snake.js
     }
 
 
@@ -315,6 +342,27 @@ export function openSnakeTab() {
 }
 
 
+<<<<<<< HEAD:project/frontend/src/snake.js
+// export function pauseSnakeGame() {
+//     if (!snakeOn) return;
+
+//     if (socket && socket.readyState === WebSocket.OPEN) {
+//         socket.send(JSON.stringify({
+//             type: 'stopGame',
+//             opponentId,
+//             inviterId: currentPlayerId
+//         }));
+//     }
+
+//     if (animationFrame != null) {
+//         cancelAnimationFrame(animationFrame);
+//         animationFrame = null;
+//     }
+
+//     snakeOn = false;
+//     console.log('Game paused (switched tab or visibility lost)');
+// }
+=======
 export function pauseSnakeGame() {
     if (!snakeOn) return;
 
@@ -334,3 +382,4 @@ export function pauseSnakeGame() {
     snakeOn = false;
     console.log('Game paused (switched tab or visibility lost)');
 }
+>>>>>>> windows:project/frontend/src/old/snake.js
