@@ -25,6 +25,10 @@ ws
 2. backend_dev_dependencies
 nodemon
 typedoc
+@eslint/js
+eslint
+globals
+typescript-eslint
 
 3. frontend_dependencies
 
