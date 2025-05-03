@@ -1,5 +1,11 @@
 var canvas = document.getElementById('pong');
 var context = canvas.getContext('2d');
+const keys = {
+	w: false,
+	s: false,
+	ArrowUp: false,
+	ArrowDown: false,
+};
 
 let animationId = null;
 let names1 = ["NullPointerPrince","404NotFoundYou","StackOverflowed",
@@ -59,7 +65,7 @@ class Paddle {
 
 let ball = new Ball();
 let leftPaddle = new Paddle(0);
-let rightPaddle = new Paddle(canvas.width - 10);
+let rightPaddle = new Paddle(canvas.width);
 
 export function openPracticeTab() {
 	const buttonStart = document.getElementById("startGame");
@@ -88,8 +94,10 @@ function checkBall() {
 		ball.speedX = -ball.speedX;
 	}
 	// Right paddle collision
-	if (ball.x <= rightPaddle.x + rightPaddle.width &&
-		ball.x + ball.size >= rightPaddle.x && ball.y <= rightPaddle.y + rightPaddle.height) {
+	if (ball.x + ball.size >= rightPaddle.x &&
+		ball.x <= rightPaddle.x + rightPaddle.width &&
+		ball.y + ball.size >= rightPaddle.y &&
+		ball.y <= rightPaddle.y + rightPaddle.height) {
 		ball.speedX = -ball.speedX;
 	}
 	if (ball.x <= 0) {
@@ -107,21 +115,35 @@ function updateGameStatus() {
 	gameStatusDiv.innerHTML = `${player1Name}   ${leftPlayerScore} - ${rightPlayerScore}   ${player2Name}`;
 }
 
-function movePaddles(event) {
-	if (event.key === 'w' && leftPaddle.y > 0)
+function movePaddles() {
+	if (keys.w && leftPaddle.y > 0) {
 		leftPaddle.y -= leftPaddle.paddleSpeed;
-	if (event.key === 's' && leftPaddle.y + leftPaddle.height < canvas.height)
+	}
+	if (keys.s && leftPaddle.y + leftPaddle.height < canvas.height) {
 		leftPaddle.y += leftPaddle.paddleSpeed;
-	if (event.key === 'ArrowUp' && rightPaddle.y > 0)
+	}
+	if (keys.ArrowUp && rightPaddle.y > 0) {
 		rightPaddle.y -= rightPaddle.paddleSpeed;
-	if (event.key === 'ArrowDown' && rightPaddle.y + rightPaddle.height < canvas.height)
+	}
+	if (keys.ArrowDown && rightPaddle.y + rightPaddle.height < canvas.height) {
 		rightPaddle.y += rightPaddle.paddleSpeed;
+	}
 }
 
-document.addEventListener('keydown', movePaddles);
+document.addEventListener('keydown', (event) => {
+	if (event.key in keys){
+		keys[event.key] = true;
+	}
+});
+document.addEventListener('keyup', (event) => {
+	if (event.key in keys){
+		keys[event.key] = false;
+	}
+})
 
 function gameLoop() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	movePaddles();
 	ball.update();
 	checkBall();
 	ball.drawBall();
