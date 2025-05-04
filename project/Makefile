@@ -47,6 +47,14 @@ frontend:
 clean:
 	@${RM} ${BACKEND}/node_modules
 
+lint:
+	@echo "${YELLOW}Linting the backend...${END}"
+	@cd ${BACKEND} && npm run lint
+
+lint-fix:
+	@echo "${YELLOW}Linting and fixing the backend...${END}"
+	@cd ${BACKEND} && npm run lint:fix
+
 # cleanup package.json as well
 reset: clean
 	@${RM} ~/.nvm

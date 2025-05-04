@@ -29,6 +29,9 @@ typedoc
 eslint
 globals
 typescript-eslint
+prettier
+eslint-config-prettier
+eslint-plugin-prettier
 
 3. frontend_dependencies
 
@@ -41,5 +44,6 @@ typescript-eslint
 @types/websocket
 fastify-websocket
 typescript
+typescript-eslint
 ws
 
