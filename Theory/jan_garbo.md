@@ -21,6 +21,12 @@ so how would a server call its own things, ergo a tournament needs to send messa
 You call the functions internally I guess
 
 Hoe to notify a player
+{
+"status": "success",
+"message": "You have a new match!",
+"showAlert": true
+}
+Could be done with this, or by setting up event listeners in the frontend to listen for push notifications, this is rather convoluted and will require a bunch more work
 
 What should an API response look like
 apparently an API response can be marked as cacheable or non cacheable?
