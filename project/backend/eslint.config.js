@@ -28,9 +28,9 @@ export default defineConfig([
     // TODO enforce it
     // not enforced for now, so not to many diffs when merging
 
-    // rules: {
-    //   "prettier/prettier": "error", // Enforces Prettier formatting as an error
-    // },
+    rules: {
+      "prettier/prettier": "error", // Enforces Prettier formatting as an error
+    },
   },
 ]);
 
