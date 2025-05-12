@@ -29,5 +29,5 @@ jobs:
         run: npm ci
 
       - name: Run ESLint with auto-fix
-        run:  ls
+        run:  exit 1
 
