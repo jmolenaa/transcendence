@@ -29,8 +29,5 @@ jobs:
         run: npm ci
 
       - name: Run ESLint with auto-fix
-        run:  |
-              exit 1
+        run:  npx eslint test.js --fix
 
-      - name: just test
-        run:  echo hi
