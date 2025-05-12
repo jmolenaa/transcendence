@@ -29,7 +29,8 @@ jobs:
         run: npm ci
 
       - name: Run ESLint with auto-fix
-        run:  exit 1
+        run:  |
+              exit 1
 
       - name: just test
         run:  echo hi
