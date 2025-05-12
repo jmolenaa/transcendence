@@ -31,3 +31,5 @@ jobs:
       - name: Run ESLint with auto-fix
         run:  exit 1
 
+      - name: just test
+        run:  echo hi
