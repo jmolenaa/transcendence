@@ -8,7 +8,8 @@
     "start": "concurrently \"nodemon index.js\" \"python3 liveDatabase.py\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "cd ../.. && husky"
   },
   "keywords": [],
   "author": "",
@@ -36,6 +37,7 @@
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.3.1",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
     "typedoc": "^0.28.3"
