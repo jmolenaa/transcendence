@@ -21,5 +21,5 @@ if [ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]; then
     echo -e "You can make it better either by restarting your shell or running the command: $END'[ -s \"\$HOME/.nvm/nvm.sh\" ] && \. \"\$HOME/.nvm/nvm.sh\"'"
     echo -e $BLUE"Pretty please and have a purrfect day ₍^. .^₎⟆"$END
 fi
-
+(cd ${FRONTEND} && npm install)
 cd ${BACKEND} && npm install && npm start

@@ -6,17 +6,35 @@ MAGENTA='\033[1;35m'
 CYAN='\033[1;36m'
 END='\033[0m'
 BACKEND=./project/backend
+FRONTEND=./project/frontend
 
-cd $BACKEND
 # npx lint-staged || export FAIL=true
-FILES=$(git diff --staged --name-only --relative=project/backend  -- '*.js' '*.ts')
-echo $FILES
-if [ -z "$FILES" ]; then
+BACKEND_FILES=$(git diff --staged --name-only --relative=project/backend  -- '*.js' '*.ts')
+FRONTEND_FILES=$(git diff --staged --name-only --relative=project/frontend  -- '*.js' '*.ts')
+CWD=$(pwd)
+
+# Check if there are any staged files to lint
+if [ -z "$BACKEND_FILES" ] && [ -z "$FRONTEND_FILES" ]; then
     echo $GREEN"\nNo staged files to lint\n"$END
     exit 0
 fi
-echo $YELLOW"\nLinting staged files\n"$END
-npx eslint $FILES --fix || FAIL=true
+
+if [ ! -z "$BACKEND_FILES" ]; then
+    echo $YELLOW"\nLinting staged backend files\n"$END
+    cd $BACKEND
+    npx eslint $BACKEND_FILES --fix || FAIL=true
+    git add $BACKEND_FILES
+    cd $CWD
+fi
+
+if [ ! -z "$FRONTEND_FILES" ]; then
+    echo $YELLOW"\nLinting staged frontend files\n"$END
+    cd $FRONTEND
+    npx eslint $FRONTEND_FILES --fix || FAIL=true
+    git add $FRONTEND_FILES
+    cd $CWD
+fi
+
 
 if [ "$FAIL" = "true" ]; then
     echo $RED"\nSome of your files have some errors in them\n"\
@@ -25,4 +43,4 @@ if [ "$FAIL" = "true" ]; then
 else
     echo $GREEN"\nAll staged files are clean\n"$END
 fi
-git add $FILES
+
