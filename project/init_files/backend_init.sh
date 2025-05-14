@@ -39,6 +39,9 @@ create_package_json() {
             found = 1
         }
         }' package.json > tmp.json && mv tmp.json package.json
+        npm pkg set scripts.lint="eslint ."
+        npm pkg set scripts.lint:fix="eslint . --fix"
+        npm pkg set scripts.prepare="cd ../.. && husky"
     fi
 }
 
