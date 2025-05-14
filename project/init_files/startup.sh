@@ -22,4 +22,4 @@ if [ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]; then
     echo -e $BLUE"Pretty please and have a purrfect day ₍^. .^₎⟆"$END
 fi
 
-cd ${BACKEND} && npm start
+cd ${BACKEND} && npm install && npm start
