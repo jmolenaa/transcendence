@@ -1,5 +1,3 @@
-         let       a = 0;
+let a = 0;
 console.log(a);
-function as() {
-  console.log('test');
-}
+let s = 2;
