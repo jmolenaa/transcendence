@@ -38,6 +38,15 @@ husky
 
 
 4. frontend_dev_dependencies
+eslint
+@eslint/js
+@eslint/css
+eslint-config-prettier
+eslint-plugin-prettier
+prettier
+typescript-eslint
+globals
+
 
 
 5. currently unnecesary
