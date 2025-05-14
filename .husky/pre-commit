@@ -39,7 +39,9 @@ fi
 if [ "$FAIL" = "true" ]; then
     echo $RED"\nSome of your files have some errors in them\n"\
     "If you have time please fix them\n"\
-    "Run 'make lint' or 'make lint-fix' to see what needs to be fixed"$END
+    "You can run 'npx eslint [your_file]' to check what's wrong with specific files or\n"\
+    "Run 'make lint' or 'make lint-fix' to see all the files that need to be fixed\n"\
+    "You can also use 'npm run lint' or 'npm run lint:fix' in the frontend or backend directory"$END
 else
     echo $GREEN"\nAll staged files are clean\n"$END
 fi
