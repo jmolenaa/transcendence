@@ -9,8 +9,8 @@ BACKEND=./project/backend
 FRONTEND=./project/frontend
 
 # npx lint-staged || export FAIL=true
-BACKEND_FILES=$(git diff --staged --name-only --relative=project/backend  -- '*.js' '*.ts')
-FRONTEND_FILES=$(git diff --staged --name-only --relative=project/frontend  -- '*.js' '*.ts')
+BACKEND_FILES=$(git diff --staged --name-only --diff-filter=d --relative=project/backend  -- '*.js' '*.ts')
+FRONTEND_FILES=$(git diff --staged --name-only --diff-filter=d --relative=project/frontend  -- '*.js' '*.ts')
 CWD=$(pwd)
 
 # Check if there are any staged files to lint
