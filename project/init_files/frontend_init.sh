@@ -20,8 +20,8 @@ create_package_json() {
         read option
     done
     if [[ "$option" = "1" ]]; then
-        curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/backend/package.json > package.json
-        curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/backend/package-lock.json > package-lock.json
+        curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/frontend/package.json > package.json
+        curl https://raw.githubusercontent.com/akrepkov/transcendence/refs/heads/main/project/frontend/package-lock.json > package-lock.json
     else    
         npm init -y
         awk '{
@@ -31,17 +31,8 @@ create_package_json() {
             found = 1
         }
         }' package.json > tmp.json && mv tmp.json package.json
-        awk '{
-        print
-        if ($0 ~ /"scripts"\s*:/ && !found) {
-            print "    \"start\": \"concurrently \\\"nodemon index.js\\\" \\\"python3 liveDatabase.py\\\"\","
-
-            found = 1
-        }
-        }' package.json > tmp.json && mv tmp.json package.json
         npm pkg set scripts.lint="eslint ."
         npm pkg set scripts.lint:fix="eslint . --fix"
-        npm pkg set scripts.prepare="cd ../.. && husky"
     fi
 }
 
@@ -61,7 +52,7 @@ if [ "$CURRENT_NODE_VERSION" != "$NODE_VERSION" ]; then
     fi
 fi
 
-cd $BACKEND
+cd $FRONTEND
 
 if [ -f "./package.json" ]; then
     NEED_NPM_INIT=false
@@ -83,17 +74,17 @@ fi
 if [ "$NEED_INSTALL_MODULES" = true ]; then
     echo -e $RED"\nDetected the need to install modules, installing ..."$END
     if [ "$option" = 2 ]; then
-        npm install $(get_packages "backend_dependencies" )
-        npm install $(get_packages "backend_dev_dependencies") --save-dev
-        echo -e $GREEN"\nBackend initialised (hopefully succesfully)"$END
+        npm install $(get_packages "frontend_dependencies" )
+        npm install $(get_packages "frontend_dev_dependencies") --save-dev
+        echo -e $GREEN"\nFrontend initialised (hopefully succesfully)"$END
     else
         npm install
-        echo -e $GREEN"\nBackend initialised (hopefully succesfully)"$END
+        echo -e $GREEN"\nFrontend initialised (hopefully succesfully)"$END
     fi
     
 fi
 
 if [[ "$NEED_NPM_INIT" = false && "$NEED_INSTALL_MODULES" = false ]]; then
-    echo -e $GREEN"\nBackend already initialised\n"$END
+    echo -e $GREEN"\nFrontend already initialised\n"$END
 fi
 

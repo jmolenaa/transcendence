@@ -42,5 +42,8 @@ There is a method you send, so GET just gets resource, POST posts it to the serv
 
 So Rest APIs have endpoints for resources and when a client request it the server returns all the information about that resource, ex. fetch user will return all the info about the user
 
-
+TODOS
+fix workflows to only do something for pushing to main
+setup makeifle rule to pull package.jsons form branches
+merge Anna code, check if it works and merge it back to Anna, we'll prbably have to do this with Anna there
 

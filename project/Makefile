@@ -19,6 +19,7 @@ export NODE_VERSION=v23.11
 # scripts
 NODE_INIT=./init_files/node_init.sh
 BACKEND_INIT = ./init_files/backend_init.sh
+FRONTEND_INIT = ./init_files/frontend_init.sh
 STARTUP_SCRIPT = ./init_files/startup.sh
 
 RM=rm -rf
@@ -41,25 +42,32 @@ backend:
 	@${BACKEND_INIT}
 
 frontend:
-	@echo "${YELLOW}Frontend doesn't require building yet${END}"
+	@${FRONTEND_INIT}
 
 # cleanup node_modules
 clean:
 	@${RM} ${BACKEND}/node_modules
+	@${RM} ${FRONTEND}/node_modules
 
 lint:
 	@echo "${YELLOW}Linting the backend...${END}"
-	@cd ${BACKEND} && npm run lint
+	@cd ${BACKEND} && npm run lint || true
+	@echo "${YELLOW}Linting the frontend...${END}"
+	@cd ${FRONTEND} && npm run lint || true
 
 lint-fix:
 	@echo "${YELLOW}Linting and fixing the backend...${END}"
-	@cd ${BACKEND} && npm run lint:fix
+	@cd ${BACKEND} && npm run lint:fix || true
+	@echo "${YELLOW}Linting and fixing the frontend...${END}"
+	@cd ${FRONTEND} && npm run lint:fix || true
 
 # cleanup package.json as well
 reset: clean
 	@${RM} ~/.nvm
 	@${RM} ${BACKEND}/package.json
 	@${RM} ${BACKEND}/package-lock.json
+	@${RM} ${FRONTEND}/package.json
+	@${RM} ${FRONTEND}/package-lock.json
 
 re: clean dev
 

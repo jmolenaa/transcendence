@@ -1,0 +1,48 @@
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+MAGENTA='\033[1;35m'
+CYAN='\033[1;36m'
+END='\033[0m'
+BACKEND=./project/backend
+FRONTEND=./project/frontend
+
+# npx lint-staged || export FAIL=true
+BACKEND_FILES=$(git diff --staged --name-only --diff-filter=d --relative=project/backend  -- '*.js' '*.ts')
+FRONTEND_FILES=$(git diff --staged --name-only --diff-filter=d --relative=project/frontend  -- '*.js' '*.ts')
+CWD=$(pwd)
+
+# Check if there are any staged files to lint
+if [ -z "$BACKEND_FILES" ] && [ -z "$FRONTEND_FILES" ]; then
+    echo $GREEN"\nNo staged files to lint\n"$END
+    exit 0
+fi
+
+if [ ! -z "$BACKEND_FILES" ]; then
+    echo $YELLOW"\nLinting staged backend files\n"$END
+    cd $BACKEND
+    npx eslint $BACKEND_FILES --fix || FAIL=true
+    git add $BACKEND_FILES
+    cd $CWD
+fi
+
+if [ ! -z "$FRONTEND_FILES" ]; then
+    echo $YELLOW"\nLinting staged frontend files\n"$END
+    cd $FRONTEND
+    npx eslint $FRONTEND_FILES --fix || FAIL=true
+    git add $FRONTEND_FILES
+    cd $CWD
+fi
+
+
+if [ "$FAIL" = "true" ]; then
+    echo $RED"\nSome of your files have some errors in them\n"\
+    "If you have time please fix them\n"\
+    "You can run 'npx eslint [your_file]' to check what's wrong with specific files or\n"\
+    "Run 'make lint' or 'make lint-fix' to see all the files that need to be fixed\n"\
+    "You can also use 'npm run lint' or 'npm run lint:fix' in the frontend or backend directory"$END
+else
+    echo $GREEN"\nAll staged files are clean\n"$END
+fi
+
