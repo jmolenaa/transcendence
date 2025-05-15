@@ -35,13 +35,16 @@ dev: node backend frontend
 
 # calls script that makes sure the right version of node is being used
 node:
+	@echo "${YELLOW}Checking and initialising Node...${END}"
 	@${NODE_INIT}
 
 # initialises package.json and installs modules if they aren't already there
 backend:
+	@echo "${YELLOW}Checking and initialising the backend...${END}"
 	@${BACKEND_INIT}
 
 frontend:
+	@echo "${YELLOW}Checking and initialising the frontend...${END}"
 	@${FRONTEND_INIT}
 
 # cleanup node_modules

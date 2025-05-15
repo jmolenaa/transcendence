@@ -11,7 +11,7 @@ END='\033[0m'
 
 
 create_package_json() {
-    echo -e $RED"\nNo package.json detected, initialising"$END
+    echo -e $RED"\nNo frontend package.json detected, initialising"$END
     echo -e "Would you like to download the package.json from the main branch of the repository? (recommended) Type 1"
     echo -e "Or initialise a completely new package.json? Type 2"
     read option

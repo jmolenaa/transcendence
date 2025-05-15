@@ -44,5 +44,5 @@ if [ "$NEED_NODE_INSTALL" = true ]; then
     nvm use $NODE_VERSION
     echo -e $GREEN"\nNode has been installed\n"$END
 else
-    echo -e $GREEN"Correct version of Node already installed$END"
+    echo -e $GREEN"\nCorrect version of Node already installed\n$END"
 fi
