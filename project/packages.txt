@@ -21,6 +21,7 @@ concurrently
 fastify-websocket
 typescript
 ws
+uu
 
 2. backend_dev_dependencies
 nodemon
