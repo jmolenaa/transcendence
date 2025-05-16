@@ -1,8 +1,22 @@
 import * as userServices  from '../services/userServices.js';
-import {handleError} from '../utils/utils.js';
+import path from 'path';
+import fs from 'fs';
+import pump from 'pump';
+import jwt from 'jsonwebtoken';
+const JWT_SECRET = "" + process.env.JWT_SECRET; //using environmental variable for JWT secret
+import { fileURLToPath } from 'url';
+
+
+//Why do I need it????????????
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log("File name in controllers.js:", __filename); // Debugging
+console.log("Dirname name in controllers.js:", __dirname); // Debugging
+
+// import {handleError} from '../utils/utils.js';
 
 const getAllUsersHandler = (request, reply) => {
-    const users = getUsers();  // Retrieve all users from the database
+    const users = userServices.getUsers();  // Retrieve all users from the database
     reply.send(users);  // Send the list of users as the response
 }
 
@@ -11,7 +25,7 @@ const createUserHandler = (request, reply) => {
     if (!username) {
         return reply.status(400).send({ error: 'username is required' });
     }
-    const userId = addUser(username);
+    const userId = userServices.addUser(username);
     reply.send({ id: userId, username }); 
 }
 
@@ -21,7 +35,7 @@ const deleteUserHandler = (request, reply) => {
     if (!username) {
         return reply.status(400).send({ error: 'username is required' });
     }
-    const success = deleteUser(username)
+    const success = userServices.deleteUser(username)
     if (!success) {
         return reply.status(404).send({ error: 'User not found' });
     }
@@ -45,7 +59,7 @@ const saveWinnerHandler = (request, reply) => {
         return reply.status(400).send({ error: 'Player names and winner ID are required' });
     }
 
-    const gameId = saveGameResults(player1, player2, winner_name);
+    const gameId = userServices.saveGameResults(player1, player2, winner_name);
     reply.send({ message: 'Game results saved', gameId });
 }
 
@@ -70,13 +84,22 @@ const profileHandler = (request, reply) => {
 }
 
 const uploadAvatarHandler = async(request, reply) => {
-    const data = await request.file;
-    const filename = `avatar_${Date.now()}_${data.filename}`;
-    console.log("File name:", filename); // Debugging
-    const filepath = path.join(__dirname, 'uploads', filename);
-    await pump(data.file, fs.createWriteStream(filepath));
-    const avatarUrl = `/uploads/${filename}`;
-    return { success: true, avatar: avatarUrl };
+    try {
+        const data = await request.file();
+        const filename = `avatar_${Date.now()}_${data.filename}`;
+        console.log("File name:", filename); // Debugging
+        const filepath = path.join(__dirname,'..', 'uploads', filename);
+        pump(data.file, fs.createWriteStream(filepath));
+        const avatarUrl = `/uploads/${filename}`;
+	} catch (error) {
+		console.error('Upload error:', error);
+		return reply.code(500).send({ success: false, error: 'Upload failed' });
+	}
+
+	//if you have some cleanup, logging, or additional logic after reply.send(), 
+	// and you don't await it — those lines might execute before the response is properly sent. 
+	// It can cause weird bugs or unexpected behavior.
+    return (await reply.code(200).send({ success: true, avatar: avatarUrl }));
 }
 
 

@@ -1,5 +1,5 @@
 import db from '../database/index.js';
-import {handleError} from '../utils/utils.js';
+// import {handleError} from '../utils/utils.js';
 
 // Function to insert a user
 export function addUser(username) {

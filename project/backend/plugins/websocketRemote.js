@@ -1,7 +1,5 @@
 import { updateBall, getGameState, moveLeftPaddle, moveRightPaddle } from './gameLogic.js';
-const WIDTH = 800;
-const HEIGHT = 600;
-const PADDLE_HEIGHT = 100;
+
 let gameLoopStarted = false;
 const gameClients = new Set();
 let players = []; //for the differentiating players right now 1 and 2
