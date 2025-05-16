@@ -14,6 +14,7 @@ export BACKEND := ./backend
 export FRONTEND := ./frontend
 export NVM_DIR = ${HOME}/.nvm
 export PACKAGE_FILE_PATH=${PWD}/packages.txt
+export PACKAGE_FILES = ${PACKAGE_FILE_PATH} ${PWD}/${BACKEND}/package.json ${PWD}/${BACKEND}/package-lock.json ${PWD}/${FRONTEND}/package.json ${PWD}/${FRONTEND}/package-lock.json
 export NODE_VERSION=v23.11
 
 # scripts
@@ -21,6 +22,7 @@ NODE_INIT=./init_files/node_init.sh
 BACKEND_INIT = ./init_files/backend_init.sh
 FRONTEND_INIT = ./init_files/frontend_init.sh
 STARTUP_SCRIPT = ./init_files/startup.sh
+PACKAGE_SCRIPT = ./init_files/checkout_packages.sh
 
 RM=rm -rf
 
@@ -72,7 +74,11 @@ reset: clean
 	@${RM} ${FRONTEND}/package.json
 	@${RM} ${FRONTEND}/package-lock.json
 
+package_update:
+	@echo "${YELLOW}Updating packages...${END}"
+	@${PACKAGE_SCRIPT}
+
 re: clean dev
 
-.PHONY: all dev clean re reset backend frontend node production
+.PHONY: all dev clean re reset backend frontend node production lint lint-fix
 
